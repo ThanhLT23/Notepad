@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <!-- Brand Colors -->
+    <color name="primaryColor">#9A8165</color> <!-- Màu của Toolbar (App Bar) -->
+    <color name="secondColor">#74664F</color> <!-- Màu của Floating Action Button -->
+
+    <!-- System & Background Colors -->
+    <color name="statusBarColor">#332921</color> <!-- Màu của thanh trạng thái (Status Bar) -->
+    <color name="backgroundColor">#FDFFE3</color> <!-- Màu nền chính của ứng dụng -->
+
+    <!-- Component Colors -->
+    <color name="noteBackgroundColor">#F6B3B5</color> <!-- Màu nền của ghi chú (tông hồng) -->
+    <color name="noteBackgroundGradientStart">#F8CCD0</color> <!-- Màu bắt đầu gradient của ghi chú -->
+    <color name="noteBackgroundGradientEnd">#F3A2A6</color> <!-- Màu kết thúc gradient của ghi chú -->
+
+    <!-- Text & Icon Colors -->
+    <color name="textColorPrimary">#111111</color> <!-- Màu chữ chính (Tiêu đề ghi chú) -->
+    <color name="textColorSecondary">#4A4A4A</color> <!-- Màu chữ phụ (Thời gian chỉnh sửa) -->
+    <color name="white">#FFFFFF</color> <!-- Màu chữ/icon trên nền primary (Icon, Tiêu đề Notepad Free) -->
+</resources>

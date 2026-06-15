@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Notepad</string>
+    <string name="fab_des">Add note</string>
+</resources>
