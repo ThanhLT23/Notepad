@@ -8,30 +8,47 @@
     android:background="@color/backgroundColor"
     tools:context=".ui.main.MainActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/ablMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tbMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primaryColor"
+            app:titleTextColor="@color/white"
+            app:title="@string/menu_title"
+            app:navigationIcon="@drawable/ic_menu"
+            android:theme="@style/MyThemeOverlay_Toolbar"
+            tools:menu="@menu/menu_appbar"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMain"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:padding="@dimen/spacing_sm"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:padding="@dimen/_5sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:itemCount="7"
+        app:layout_constraintTop_toBottomOf="@+id/ablMain"
+        tools:itemCount="4"
         tools:listitem="@layout/item_note" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAdd"
+        android:id="@+id/fabAddNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/spacing_lg"
-        android:layout_marginBottom="@dimen/spacing_lg"
-        android:contentDescription="@string/fab_des"
-        app:backgroundTint="@color/secondColor"
-        app:iconTint="@color/white"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_55sdp"
+        android:contentDescription="@string/todo"
         android:src="@drawable/ic_add"
+        app:backgroundTint="@color/primaryColor"
+        app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
