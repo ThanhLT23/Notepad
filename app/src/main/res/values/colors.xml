@@ -2,7 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <!-- Brand Colors -->
-    <color name="primaryColor">#9A8165</color>
+    <color name="primaryColor">#917754</color>
     <color name="secondColor">#74664F</color>
 
     <!-- System & Background Colors -->
@@ -10,11 +10,12 @@
     <color name="backgroundColor">#ffffdd</color>
 
     <!-- Component Colors -->
-    <color name="note_bg_selected">#C5B299</color>
+    <color name="note_bg_selected">#fcfbcd</color>
     <color name="bg_text_input">#faf8c5</color>
     <color name="noteBackgroundGradientStart">#F8CCD0</color>
     <color name="noteBackgroundGradientEnd">#F3A2A6</color>
     <color name="note_border">#55000000</color>
+    <color name="bg_note_selected">#c4a88d</color>
 
     <!-- Text & Icon Colors -->
     <color name="textColorPrimary">#111111</color>

@@ -8,5 +8,8 @@ data class NoteItems(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val title: String,
-    val content: String
+    val content: String,
+    val lastTime: Long,
+    val isSelected: Boolean = false,
+    val isDeleted: Boolean = false
 )

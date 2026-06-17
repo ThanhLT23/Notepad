@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseActivity<VB : ViewBinding, VM: ViewModel>: AppCompatActivity() {
+abstract class BaseActivity<VB : ViewBinding>: AppCompatActivity() {
     abstract val binding: VB
-    abstract val viewModel: VM
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

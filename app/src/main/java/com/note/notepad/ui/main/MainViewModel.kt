@@ -2,48 +2,79 @@ package com.note.notepad.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.note.notepad.data.local.dao.NoteDao
 import com.note.notepad.data.local.model.NoteItems
+import com.note.notepad.data.repository.NoteRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val dao : NoteDao) : ViewModel() {
+class MainViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _noteList = MutableStateFlow<List<NoteItems>>(emptyList())
     val noteList = _noteList.asStateFlow()
+    private val _navigateToEdit = MutableSharedFlow<Int>()
+    val navigateToEdit = _navigateToEdit.asSharedFlow()
+    private val _selectedIds = MutableStateFlow<Set<Int>>(emptySet())
+    val selectedIds = _selectedIds.asStateFlow()
+    private val _isSelectionMode = MutableStateFlow(false)
+    val isSelectionMode = _isSelectionMode.asStateFlow()
 
     init {
-        loadNotes()
-    }
-
-    fun loadNotes() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val list = dao.getAllNotes()
-            _noteList.value = list
+        viewModelScope.launch {
+            repository.getAllNote().collect { list ->
+                _noteList.value = list
+            }
         }
     }
 
-    fun addNotes(title: String, content: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val newNote = NoteItems(title = title, content = content)
-            dao.insertNote(newNote)
-            loadNotes()
+    fun onFabClicked() {
+        viewModelScope.launch {
+            _navigateToEdit.emit(-1)
         }
     }
 
-    fun updateNote(note: NoteItems, newTitle: String, newContent: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val updateNote = note.copy(title = newTitle, content = newContent)
-            dao.updateNote(updateNote)
-            loadNotes()
+    fun onSelection(noteId: Int) {
+        if (!_isSelectionMode.value) {
+            _isSelectionMode.value = true
+        }
+        val currentSelected = _selectedIds.value.toMutableSet()
+        if (currentSelected.contains(noteId)) {
+            currentSelected.remove(noteId)
+        } else {
+            currentSelected.add(noteId)
+        }
+        _selectedIds.value = currentSelected
+    }
+
+    fun exitSelectionMode() {
+        _isSelectionMode.value = false
+        clearSelection()
+    }
+
+    fun selectAll() {
+        val allIds = _noteList.value.map { it.id }.toSet()
+        if (selectedIds.value.size == allIds.size && allIds.isNotEmpty()) {
+            clearSelection()
+        } else {
+            _selectedIds.value = allIds
         }
     }
 
-    fun deleteNote(note: NoteItems) {
-        viewModelScope.launch(Dispatchers.IO) {
-            dao.deleteNote(note)
-            loadNotes()
+    fun clearSelection() {
+        _selectedIds.value = emptySet()
+    }
+
+    fun deleteSelectionNotes() {
+        val deleteIds = _selectedIds.value.toList()
+        if (deleteIds.isEmpty()) return
+
+        viewModelScope.launch {
+            repository.softDelete(deleteIds)
+            clearSelection()
+            _isSelectionMode.value = false
         }
     }
+
 }

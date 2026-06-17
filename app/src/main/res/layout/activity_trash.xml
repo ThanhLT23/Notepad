@@ -6,24 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.trash.TrashActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/ablMain"
+        android:id="@+id/ablTrash"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tbMain"
+            android:id="@+id/tbTrash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primaryColor"
             app:titleTextColor="@color/white"
-            app:title="@string/menu_title"
+            app:title="@string/trash_title"
             app:navigationIcon="@drawable/ic_menu"
             android:theme="@style/MyThemeOverlay_Toolbar"
-            tools:menu="@menu/menu_appbar"/>
+            tools:menu="@menu/trash_appbar"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -36,21 +36,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ablMain"
+        app:layout_constraintTop_toBottomOf="@+id/ablTrash"
         tools:itemCount="4"
         tools:listitem="@layout/item_note" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:layout_marginBottom="@dimen/_55sdp"
-        android:contentDescription="@string/todo"
-        android:src="@drawable/ic_add"
-        app:backgroundTint="@color/primaryColor"
-        app:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

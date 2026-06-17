@@ -10,4 +10,8 @@
     <string name="undo_menu">UNDO</string>
     <string name="note_title">Enter title...</string>
     <string name="note_content">Enter text...</string>
+    <string name="format_last_edit">Last edit: %s</string>
+    <string name="menu_delete">delete</string>
+    <string name="menu_select_all">select all</string>
+    <string name="trash_title">Trash</string>
 </resources>

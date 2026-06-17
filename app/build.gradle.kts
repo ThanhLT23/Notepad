@@ -60,5 +60,10 @@ dependencies {
     ksp("androidx.room:room-compiler:2.8.4")
     //coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+    //koin
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
+    implementation(libs.koin.startup)
 
 }
