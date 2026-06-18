@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.note.notepad.data.local.model.NoteItems
 import com.note.notepad.data.repository.NoteRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -81,6 +80,54 @@ class MainViewModel(private val repository: NoteRepository) : ViewModel() {
             repository.softDelete(deleteIds)
             clearSelection()
             _isSelectionMode.value = false
+        }
+    }
+
+    fun sortByNewestTime() {
+        viewModelScope.launch {
+            repository.getSortedByTimeDesc().collect { list ->
+                _noteList.value = list
+            }
+        }
+    }
+
+    fun sortByOldestTime() {
+        viewModelScope.launch {
+            repository.getSortedByTimeAsc().collect { list ->
+                _noteList.value = list
+            }
+        }
+    }
+
+    fun sortByNewestCreation() {
+        viewModelScope.launch {
+            repository.getSortedByCreationDesc().collect { list ->
+                _noteList.value = list
+            }
+        }
+    }
+
+    fun sortByOldestCreation() {
+        viewModelScope.launch {
+            repository.getSortedByCreationAsc().collect { list ->
+                _noteList.value = list
+            }
+        }
+    }
+
+    fun sortByTitleAZ() {
+        viewModelScope.launch {
+            repository.getSortedByTitleAsc().collect { list ->
+                _noteList.value = list
+            }
+        }
+    }
+
+    fun sortByTitleZA() {
+        viewModelScope.launch {
+            repository.getSortedByTitleDesc().collect { list ->
+                _noteList.value = list
+            }
         }
     }
 

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
+import com.note.notepad.data.local.model.NoteItems
 import com.note.notepad.databinding.ActivityMainBinding
 import com.note.notepad.ui.editor.CreateNoteActivity
 import com.note.notepad.ui.main.adapter.MainAdapter
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val viewModel: MainViewModel by viewModel()
     private lateinit var noteAdapter: MainAdapter
+    private var currentSortOption = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         )
         binding.rvMain.layoutManager = LinearLayoutManager(this)
         binding.rvMain.adapter = noteAdapter
+        binding.rvMain.itemAnimator = null
+
         binding.fabAddNote.setOnClickListener {
             viewModel.onFabClicked()
         }
@@ -76,7 +80,9 @@ class MainActivity : AppCompatActivity() {
     private fun observeData() {
         lifecycleScope.launch {
             viewModel.noteList.collect { list ->
-                noteAdapter.submitList(list)
+                noteAdapter.submitList(list) {
+                    binding.rvMain.scrollToPosition(0)
+                }
             }
         }
         lifecycleScope.launch {
@@ -139,6 +145,7 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
             .show()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -174,6 +181,12 @@ class MainActivity : AppCompatActivity() {
                 viewModel.selectAllNotes()
                 true
             }
+
+            R.id.menu_sort -> {
+                sortNotesDialog()
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -183,13 +196,46 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.itTrash -> {
                     startActivity(Intent(this@MainActivity, TrashActivity::class.java))
-            }
+                }
+
                 R.id.itNote -> {
                     binding.dlMain.close()
-            }
+                }
             }
             binding.dlMain.close()
             true
         }
     }
+
+    private fun sortNotesDialog() {
+        val options = arrayOf(
+            "edit date: from newest",
+            "edit date: from oldest",
+            "title: A to Z",
+            "title: Z to A",
+            "creation date: from newest",
+            "creation date: from oldest"
+        )
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Sort by")
+            .setSingleChoiceItems(options, currentSortOption) { _, option ->
+                currentSortOption = option
+            }
+            .setPositiveButton("SORT") { dialog, _ ->
+                when (currentSortOption) {
+                    0 -> viewModel.sortByNewestTime()
+                    1 -> viewModel.sortByOldestTime()
+                    2 -> viewModel.sortByTitleAZ()
+                    3 -> viewModel.sortByTitleZA()
+                    4 -> viewModel.sortByNewestCreation()
+                    5 -> viewModel.sortByOldestCreation()
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("CANCEL") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
 }

@@ -30,7 +30,8 @@ class CreateNoteViewModel(private val repository: NoteRepository) : ViewModel() 
                 val newNote = NoteItems(
                     title = newTitle,
                     content = content,
-                    lastTime = System.currentTimeMillis()
+                    lastTime = System.currentTimeMillis(),
+                    creationTime = System.currentTimeMillis()
                 )
                 val newId = repository.insertNote(newNote)
                 _currentNote.value = newNote.copy(id = newId.toInt())
