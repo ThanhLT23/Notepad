@@ -25,4 +25,9 @@ interface NoteDao {
     @Query("UPDATE notes SET isDeleted = 1, isSelected = 0 WHERE id IN (:ids)")
     suspend fun softDelete(ids: List<Int>)
 
+    @Query("SELECT * FROM notes WHERE isDeleted = 1")
+    fun getDeletedNotes(): Flow<List<NoteItems>>
+
+    @Query("UPDATE notes SET isDeleted = 0, isSelected = 0 WHERE id IN (:ids)")
+    suspend fun restoreItem(ids: List<Int>)
 }

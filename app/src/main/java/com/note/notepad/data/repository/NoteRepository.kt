@@ -21,4 +21,10 @@ class NoteRepository(private val noteDao: NoteDao) {
     suspend fun softDelete(ids: List<Int>) = withContext(Dispatchers.IO) {
         noteDao.softDelete(ids)
     }
+
+    fun getDeletedNote(): Flow<List<NoteItems>> = noteDao.getDeletedNotes()
+
+    suspend fun restoreItem(ids: List<Int>) = withContext(Dispatchers.IO) {
+        noteDao.restoreItem(ids)
+    }
 }

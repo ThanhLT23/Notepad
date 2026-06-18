@@ -5,4 +5,14 @@
         android:id="@+id/menu_settings"
         android:title="@string/setting_menu"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_select_all"
+        android:icon="@drawable/ic_all"
+        android:title="@string/menu_select_all"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@drawable/ic_delete"
+        android:title="@string/menu_delete"
+        app:showAsAction="always" />
 </menu>

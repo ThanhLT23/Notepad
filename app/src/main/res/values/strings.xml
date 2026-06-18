@@ -14,4 +14,7 @@
     <string name="menu_delete">delete</string>
     <string name="menu_select_all">select all</string>
     <string name="trash_title">Trash</string>
+    <string name="menu_notes">Notes</string>
+    <string name="menu_categories">Categories</string>
+    <string name="item_edit_categories">Edit categories</string>
 </resources>

@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,6 +17,7 @@ import com.note.notepad.common.delegate.viewBinding
 import com.note.notepad.databinding.ActivityMainBinding
 import com.note.notepad.ui.editor.CreateNoteActivity
 import com.note.notepad.ui.main.adapter.MainAdapter
+import com.note.notepad.ui.trash.TrashActivity
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val viewModel: MainViewModel by viewModel()
     private lateinit var noteAdapter: MainAdapter
-    private var isSelectionMode = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -53,7 +53,18 @@ class MainActivity : AppCompatActivity() {
         binding.fabAddNote.setOnClickListener {
             viewModel.onFabClicked()
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (viewModel.isSelectionMode.value) {
+                    viewModel.clearSelection()
+                    viewModel.exitSelectionMode()
+                } else {
+                    finish()
+                }
+            }
+        })
 
+        initDrawer()
     }
 
     private fun openEditorScreen(noteId: Int) {
@@ -103,6 +114,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.tbMain.setTitle(R.string.app_name)
             binding.tbMain.setNavigationIcon(R.drawable.ic_menu)
+            binding.tbMain.setNavigationOnClickListener {
+                binding.dlMain.open()
+            }
             binding.fabAddNote.show()
         }
     }
@@ -155,6 +169,21 @@ class MainActivity : AppCompatActivity() {
             }
 
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun initDrawer() {
+        binding.navMain.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.itTrash -> {
+                    startActivity(Intent(this@MainActivity, TrashActivity::class.java))
+            }
+                R.id.itNote -> {
+                    binding.dlMain.close()
+            }
+            }
+            binding.dlMain.close()
+            true
         }
     }
 }

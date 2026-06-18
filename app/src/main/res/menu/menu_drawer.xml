@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/grNote">
+        <item
+            android:id="@+id/itNote"
+            android:icon="@drawable/ic_note"
+            android:title="@string/menu_notes"/>
+    </group>
+    <group
+        android:id="@+id/grCategory"
+        android:title="@string/menu_categories">
+        <item
+            android:id="@+id/itCategory"
+            android:title="@string/item_edit_categories"/>
+    </group>
+    <group android:id="@+id/grTools">
+        <item
+            android:id="@+id/itBackup"
+            android:title="Backup"/>
+        <item
+            android:id="@+id/itTrash"
+            android:title="Trash"/>
+    </group>
+</menu>
