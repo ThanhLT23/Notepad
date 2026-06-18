@@ -30,4 +30,13 @@ interface NoteDao {
 
     @Query("UPDATE notes SET isDeleted = 0, isSelected = 0 WHERE id IN (:ids)")
     suspend fun restoreItem(ids: List<Int>)
+
+    @Query("DELETE FROM notes WHERE id IN (:ids)")
+    suspend fun hardDelete(ids: List<Int>)
+
+    @Query("DELETE FROM notes WHERE isDeleted = 1")
+    suspend fun clearTrash()
+
+    @Query("UPDATE notes SET isDeleted = 0 WHERE isDeleted = 1")
+    suspend fun restoreAllTrash()
 }

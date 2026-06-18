@@ -2,17 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_settings"
-        android:title="@string/setting_menu"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/menu_select_all"
         android:icon="@drawable/ic_all"
         android:title="@string/menu_select_all"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_delete"
         android:icon="@drawable/ic_delete"
         android:title="@string/menu_delete"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_empty_trash"
+        android:title="@string/empty_trash_menu"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_undelete_all"
+        android:title="@string/menu_undelete_all"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_selected_delete"
+        android:title="@string/menu_selected_delete"
+        app:showAsAction="never"/>
+
 </menu>

@@ -152,6 +152,8 @@ class MainActivity : AppCompatActivity() {
         menu?.findItem(R.id.menu_delete)?.isVisible = isMode
         menu?.findItem(R.id.menu_search)?.isVisible = !isMode
         menu?.findItem(R.id.menu_sort)?.isVisible = !isMode
+        menu?.findItem(R.id.menu_select_all_notes)?.isVisible = !isMode
+
 
         return super.onPrepareOptionsMenu(menu)
     }
@@ -168,6 +170,10 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.menu_select_all_notes -> {
+                viewModel.selectAllNotes()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

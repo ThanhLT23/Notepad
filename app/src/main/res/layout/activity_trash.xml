@@ -1,43 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/dlTrash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
     tools:context=".ui.trash.TrashActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/ablTrash"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tbTrash"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/ablTrash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
-            app:titleTextColor="@color/white"
-            app:title="@string/trash_title"
-            app:navigationIcon="@drawable/ic_menu"
-            android:theme="@style/MyThemeOverlay_Toolbar"
-            tools:menu="@menu/trash_appbar"/>
-    </com.google.android.material.appbar.AppBarLayout>
+            app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTrash"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:padding="@dimen/_5sdp"
-        android:layout_marginBottom="@dimen/_35sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ablTrash"
-        tools:itemCount="4"
-        tools:listitem="@layout/item_note" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tbTrash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primaryColor"
+                android:theme="@style/MyThemeOverlay_Toolbar"
+                app:navigationIcon="@drawable/ic_menu"
+                app:title="@string/trash_title"
+                app:titleTextColor="@color/white"
+                tools:menu="@menu/trash_appbar" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTrash"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/_35sdp"
+            android:clipToPadding="false"
+            android:padding="@dimen/_5sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ablTrash"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_note" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/navTrash"
+        android:layout_gravity="start"
+        app:menu="@menu/menu_drawer"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>
+

@@ -9,13 +9,19 @@
     <item
         android:id="@+id/menu_sort"
         android:title="@string/sort_menu"
-        
+
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_settings"
-        android:title="@string/setting_menu"
+        android:title="@string/menu_setting"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_select_all_notes"
+        android:title="@string/menu_select_all_notes"
+        app:showAsAction="never" />
+
 
     <item
         android:id="@+id/menu_select_all"

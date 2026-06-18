@@ -62,6 +62,13 @@ class MainViewModel(private val repository: NoteRepository) : ViewModel() {
         }
     }
 
+    fun selectAllNotes() {
+        val ids = _noteList.value.map { it.id }.toSet()
+        _isSelectionMode.value = true
+
+        _selectedIds.value = ids
+    }
+
     fun clearSelection() {
         _selectedIds.value = emptySet()
     }

@@ -55,14 +55,43 @@ class TrashViewModel(private val repository: NoteRepository) : ViewModel() {
         _selectedIds.value = emptySet()
     }
 
-    fun restoreItem() {
-        val deleteIds = _selectedIds.value.toList()
-        if (deleteIds.isEmpty()) return
-
+    fun restoreItem(noteId: Int? = null) {
         viewModelScope.launch {
-            repository.restoreItem(deleteIds)
-            clearSelection()
-            _isSelectionMode.value = false
+            if (noteId != null) {
+                repository.restoreItem(listOf(noteId))
+            } else {
+                val deleteIds = _selectedIds.value.toList()
+                if (deleteIds.isEmpty()) return@launch
+                repository.restoreItem(deleteIds)
+                exitSelectionMode()
+            }
+        }
+    }
+
+    fun hardDelete(noteId: Int? = null) {
+        viewModelScope.launch {
+            if (noteId != null) {
+                repository.hardDelete(listOf(noteId))
+            } else {
+                val deleteIds = _selectedIds.value.toList()
+                if (deleteIds.isEmpty()) return@launch
+                repository.hardDelete(deleteIds)
+                exitSelectionMode()
+            }
+        }
+    }
+
+    fun clearTrash() {
+        viewModelScope.launch {
+            repository.clearTrash()
+            exitSelectionMode()
+        }
+    }
+
+    fun restoreAllTrash() {
+        viewModelScope.launch {
+            repository.restoreAllTrash()
+            exitSelectionMode()
         }
     }
 

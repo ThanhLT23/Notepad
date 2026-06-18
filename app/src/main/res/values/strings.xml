@@ -3,7 +3,7 @@
     <string name="fab_des">Add note</string>
     <string name="search_menu">search menu</string>
     <string name="sort_menu">SORT</string>
-    <string name="setting_menu">setting menu</string>
+    <string name="empty_trash_menu">Empty trash</string>
     <string name="menu_title">Notepad Free</string>
     <string name="todo">TODO</string>
     <string name="save_menu">SAVE</string>
@@ -17,4 +17,8 @@
     <string name="menu_notes">Notes</string>
     <string name="menu_categories">Categories</string>
     <string name="item_edit_categories">Edit categories</string>
+    <string name="menu_setting">Setting</string>
+    <string name="menu_undelete_all">Undelete all</string>
+    <string name="menu_selected_delete">Delete</string>
+    <string name="menu_select_all_notes">Select all notes</string>
 </resources>

@@ -4,21 +4,23 @@
         <item
             android:id="@+id/itNote"
             android:icon="@drawable/ic_note"
-            android:title="@string/menu_notes"/>
+            android:title="@string/menu_notes" />
     </group>
-    <group
-        android:id="@+id/grCategory"
-        android:title="@string/menu_categories">
-        <item
-            android:id="@+id/itCategory"
-            android:title="@string/item_edit_categories"/>
-    </group>
+    <item android:title="@string/menu_categories">
+        <menu>
+            <group android:id="@+id/grCategory">
+                <item
+                    android:id="@+id/itCategory"
+                    android:title="@string/item_edit_categories" />
+            </group>
+        </menu>
+    </item>
     <group android:id="@+id/grTools">
         <item
             android:id="@+id/itBackup"
-            android:title="Backup"/>
+            android:title="Backup" />
         <item
             android:id="@+id/itTrash"
-            android:title="Trash"/>
+            android:title="Trash" />
     </group>
 </menu>

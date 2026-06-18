@@ -27,4 +27,15 @@ class NoteRepository(private val noteDao: NoteDao) {
     suspend fun restoreItem(ids: List<Int>) = withContext(Dispatchers.IO) {
         noteDao.restoreItem(ids)
     }
+    suspend fun hardDelete(ids: List<Int>) = withContext(Dispatchers.IO) {
+        noteDao.hardDelete(ids)
+    }
+
+    suspend fun clearTrash() = withContext(Dispatchers.IO) {
+        noteDao.clearTrash()
+    }
+
+    suspend fun restoreAllTrash() = withContext(Dispatchers.IO) {
+        noteDao.restoreAllTrash()
+    }
 }
