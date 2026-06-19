@@ -2,6 +2,7 @@
     <string name="app_name">Notepad</string>
     <string name="fab_des">Add note</string>
     <string name="search_menu">search menu</string>
+    <string name="search_menu_editor">Search</string>
     <string name="sort_menu">SORT</string>
     <string name="empty_trash_menu">Empty trash</string>
     <string name="menu_title">Notepad Free</string>
@@ -21,4 +22,8 @@
     <string name="menu_undelete_all">Undelete all</string>
     <string name="menu_selected_delete">Delete</string>
     <string name="menu_select_all_notes">Select all notes</string>
+    <string name="menu_undo_all">Undo all</string>
+    <string name="menu_editor_delete">Delete</string>
+    <string name="menu_editor_search">Search</string>
+    <string name="menu_redo">Redo</string>
 </resources>

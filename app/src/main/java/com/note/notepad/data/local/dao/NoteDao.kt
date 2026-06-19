@@ -38,22 +38,4 @@ interface NoteDao {
 
     @Query("UPDATE notes SET isDeleted = 0 WHERE isDeleted = 1")
     suspend fun restoreAllTrash()
-
-    @Query("SELECT * FROM notes WHERE isDeleted = 0 ORDER BY lastTime DESC")
-    fun getSortedByTimeDesc(): Flow<List<NoteItems>>
-
-    @Query("SELECT * FROM notes WHERE isDeleted = 0 ORDER BY lastTime ASC")
-    fun getSortedByTimeAsc(): Flow<List<NoteItems>>
-
-    @Query("SELECT * FROM notes WHERE isDeleted = 0 ORDER BY creationTime DESC")
-    fun getSortedByCreationDesc(): Flow<List<NoteItems>>
-
-    @Query("SELECT * FROM notes WHERE isDeleted = 0 ORDER BY creationTime ASC")
-    fun getSortedByCreationAsc(): Flow<List<NoteItems>>
-
-    @Query("SELECT * FROM notes WHERE isDeleted = 0 ORDER BY title DESC")
-    fun getSortedByTitleDesc(): Flow<List<NoteItems>>
-
-    @Query("SELECT * FROM notes WHERE isDeleted = 0 ORDER BY title ASC")
-    fun getSortedByTitleAsc(): Flow<List<NoteItems>>
 }

@@ -13,7 +13,51 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_settings"
-        android:title="@string/menu_setting"
+        android:id="@+id/menu_redo"
+        android:title="@string/menu_redo"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_undo_all"
+        android:title="@string/menu_undo_all"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_delete"
+        android:title="@string/menu_editor_delete"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_editor_search"
+        android:title="@string/menu_editor_search"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_search_editor"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search_menu"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/menu_search_down"
+        android:icon="@drawable/ic_arrow_down"
+
+
+
+
+        android:title="Next"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_search_up"
+        android:icon="@drawable/ic_arrow_up"
+        android:title="Previous"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_search_count"
+        android:title="0/0"
+        app:showAsAction="always" />
+
 </menu>

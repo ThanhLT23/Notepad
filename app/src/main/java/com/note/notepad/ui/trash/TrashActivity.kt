@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
+import com.note.notepad.common.enums.NoteAction
+import com.note.notepad.common.helpers.DialogHelpers
 import com.note.notepad.data.local.model.NoteItems
 import com.note.notepad.databinding.ActivityTrashBinding
 import com.note.notepad.ui.main.MainActivity
@@ -48,7 +50,16 @@ class TrashActivity : AppCompatActivity() {
                     viewModel.onSelection(noteId)
                 } else {
                     val note = viewModel.deleteList.value.find { it.id == noteId }
-                    note?.let { showItemAction(it) }
+                    note?.let { DialogHelpers.showItemAction(this) { action ->
+                        when (action) {
+                            NoteAction.RESTORE -> {
+                                viewModel.restoreItem(noteId)
+                            }
+                            NoteAction.DELETE -> {
+                                viewModel.hardDelete(noteId)
+                            }
+                        }
+                    } }
                 }
             },
             onItemLongClick = { noteId ->
@@ -169,28 +180,6 @@ class TrashActivity : AppCompatActivity() {
             binding.dlTrash.close()
             true
         }
-    }
-
-    private fun showItemAction(note: NoteItems) {
-        val options = arrayOf("Undelete", "Delete")
-        var selectedOption = 0
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Select an action for the note:")
-            .setSingleChoiceItems(options, selectedOption) { _, option ->
-                selectedOption = option
-            }
-            .setPositiveButton("OK") { dialog, _ ->
-                if (selectedOption == 0) {
-                    viewModel.restoreItem(note.id)
-                } else {
-                    viewModel.hardDelete(note.id)
-                }
-                dialog.dismiss()
-            }
-            .setNegativeButton("CANCEL") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
     }
 
     private fun clearTrashDialog() {

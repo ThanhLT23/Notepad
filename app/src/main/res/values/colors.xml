@@ -22,4 +22,6 @@
     <color name="textColorSecondary">#4A4A4A</color>
     <color name="textHint">#796a43</color>
     <color name="white">#FFFFFF</color>
+    <color name="highlightColor">#aafe8e</color>
+    <color name="highlightSelect">#d4d329</color>
 </resources>

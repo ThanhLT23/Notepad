@@ -1,7 +1,11 @@
 package com.note.notepad.ui.main.adapter
 
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.BackgroundColorSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -47,12 +51,35 @@ class MainAdapter(
                 true
             }
 
+            binding.tvNoteTitle.text = highlightText(note.title, currentSearchQuery)
+        }
+
+        private fun highlightText(text: String, query: String): SpannableString {
+            val spannable = SpannableString(text)
+            if (query.isEmpty()) return spannable
+
+            val lowerText = text.lowercase()
+            val lowerQuery = text.lowercase()
+            var startPos = lowerText.indexOf(lowerQuery)
+
+            val color = ContextCompat.getColor(binding.root.context, R.color.highlightColor)
+            while (startPos >= 0) {
+                val endPos = startPos + query.length
+                spannable.setSpan(
+                    BackgroundColorSpan(color),
+                    startPos,
+                    endPos,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                startPos = lowerText.indexOf(lowerQuery, endPos)
+            }
+            return spannable
         }
     }
 
     private val selectedIds = mutableSetOf<Int>()
-
     var isSelectionMode = false
+    var currentSearchQuery: String = ""
 
     fun updateSelection(newSelectedIds: Set<Int>) {
         val oldSelected = selectedIds.toSet()
@@ -66,6 +93,15 @@ class MainAdapter(
         }
     }
 
+    fun updateSearchQuery(query: String) {
+        if (currentSearchQuery != query) {
+            currentSearchQuery = query
+            notifyItemRangeChanged(0, currentList.size, "UPDATE_HIGHLIGHT")
+        }
+    }
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val binding = ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MainViewHolder(binding)
@@ -73,6 +109,14 @@ class MainAdapter(
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         holder.bind(getItem(position))
+    }
+
+    override fun onBindViewHolder(holder: MainViewHolder, position: Int, payloads: MutableList<Any?>) {
+        if (payloads.contains("UPDATE_HIGHLIGHT")) {
+            holder.bind(getItem(position))
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
     }
 }
 

@@ -39,15 +39,4 @@ class NoteRepository(private val noteDao: NoteDao) {
         noteDao.restoreAllTrash()
     }
 
-    fun getSortedByTimeDesc(): Flow<List<NoteItems>> = noteDao.getSortedByTimeDesc()
-
-    fun getSortedByTimeAsc(): Flow<List<NoteItems>> = noteDao.getSortedByTimeAsc()
-
-    fun getSortedByCreationDesc(): Flow<List<NoteItems>> = noteDao.getSortedByCreationDesc()
-
-    fun getSortedByCreationAsc(): Flow<List<NoteItems>> = noteDao.getSortedByCreationAsc()
-
-    fun getSortedByTitleDesc(): Flow<List<NoteItems>> = noteDao.getSortedByTitleDesc()
-
-    fun getSortedByTitleAsc(): Flow<List<NoteItems>> = noteDao.getSortedByTitleAsc()
 }

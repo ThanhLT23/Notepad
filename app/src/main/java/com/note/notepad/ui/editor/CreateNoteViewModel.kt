@@ -12,6 +12,8 @@ class CreateNoteViewModel(private val repository: NoteRepository) : ViewModel() 
     private val _currentNote = MutableStateFlow<NoteItems?>(null)
     val currentNote = _currentNote.asStateFlow()
 
+
+
     fun loadData(noteId: Int) {
         if (noteId == -1) return
 
@@ -22,11 +24,11 @@ class CreateNoteViewModel(private val repository: NoteRepository) : ViewModel() 
     }
 
     fun saveNote(title: String, content: String) {
-        val newTitle = title.ifBlank {"Untitled"}
+        val newTitle = title.ifBlank { "Untitled" }
         val current = _currentNote.value
 
         viewModelScope.launch {
-            if(current == null) {
+            if (current == null) {
                 val newNote = NoteItems(
                     title = newTitle,
                     content = content,
@@ -46,5 +48,15 @@ class CreateNoteViewModel(private val repository: NoteRepository) : ViewModel() 
             }
         }
     }
+
+    fun deleteNote() {
+        val currentId = currentNote.value?.id
+        if (currentId != null && currentId > 0) {
+            viewModelScope.launch {
+                repository.softDelete(listOf(currentId))
+            }
+        }
+    }
+
 
 }

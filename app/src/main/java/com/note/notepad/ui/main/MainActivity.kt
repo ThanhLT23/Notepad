@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -14,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
-import com.note.notepad.data.local.model.NoteItems
 import com.note.notepad.databinding.ActivityMainBinding
 import com.note.notepad.ui.editor.CreateNoteActivity
 import com.note.notepad.ui.main.adapter.MainAdapter
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBar = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(0, systemBar.top, 0, 0)
+            v.setPadding(systemBar.left, systemBar.top, systemBar.right, systemBar.bottom)
             insets
         }
         initView()
@@ -59,11 +60,18 @@ class MainActivity : AppCompatActivity() {
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (viewModel.isSelectionMode.value) {
-                    viewModel.clearSelection()
-                    viewModel.exitSelectionMode()
-                } else {
-                    finish()
+                val searchItem = binding.tbMain.menu?.findItem(R.id.menu_search)
+                when {
+                    viewModel.isSelectionMode.value -> {
+                        viewModel.clearSelection()
+                        viewModel.exitSelectionMode()
+                    }
+                    searchItem?.isActionViewExpanded == true -> {
+                        searchItem.collapseActionView()
+                    }
+                    else -> {
+                        finish()
+                    }
                 }
             }
         })
@@ -105,6 +113,11 @@ class MainActivity : AppCompatActivity() {
                 invalidateOptionsMenu()
             }
         }
+        lifecycleScope.launch {
+            viewModel.searchQuery.collect { query ->
+                noteAdapter.updateSearchQuery(query)
+            }
+        }
     }
 
     private fun updateTbForSelection(isMode: Boolean) {
@@ -114,7 +127,6 @@ class MainActivity : AppCompatActivity() {
             binding.tbMain.setNavigationOnClickListener {
                 viewModel.clearSelection()
                 viewModel.exitSelectionMode()
-
             }
             binding.fabAddNote.hide()
         } else {
@@ -150,6 +162,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_appbar, menu)
+        val searchItem = menu?.findItem(R.id.menu_search)
+        val searchView = searchItem?.actionView as? SearchView
+        searchView?.setIconifiedByDefault(true)
+
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchView.clearFocus()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.searchNotes(newText.orEmpty())
+                return true
+            }
+        })
         return true
     }
 
@@ -161,6 +188,20 @@ class MainActivity : AppCompatActivity() {
         menu?.findItem(R.id.menu_sort)?.isVisible = !isMode
         menu?.findItem(R.id.menu_select_all_notes)?.isVisible = !isMode
 
+        val searchItem = menu?.findItem(R.id.menu_search)
+        val sortItem = menu?.findItem(R.id.menu_sort)
+
+        searchItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                sortItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                return true
+            }
+
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                sortItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+                return true
+            }
+        })
 
         return super.onPrepareOptionsMenu(menu)
     }
@@ -222,14 +263,7 @@ class MainActivity : AppCompatActivity() {
                 currentSortOption = option
             }
             .setPositiveButton("SORT") { dialog, _ ->
-                when (currentSortOption) {
-                    0 -> viewModel.sortByNewestTime()
-                    1 -> viewModel.sortByOldestTime()
-                    2 -> viewModel.sortByTitleAZ()
-                    3 -> viewModel.sortByTitleZA()
-                    4 -> viewModel.sortByNewestCreation()
-                    5 -> viewModel.sortByOldestCreation()
-                }
+                viewModel.sortNotes(currentSortOption)
                 dialog.dismiss()
             }
             .setNegativeButton("CANCEL") { dialog, _ ->
