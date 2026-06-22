@@ -23,6 +23,7 @@ class MainViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _isSelectionMode = MutableStateFlow(false)
     val isSelectionMode = _isSelectionMode.asStateFlow()
     private val _sortOption = MutableStateFlow(0)
+    val sortOption = _sortOption.asStateFlow()
     private val _searchOption = MutableStateFlow("")
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
@@ -30,10 +31,13 @@ class MainViewModel(private val repository: NoteRepository) : ViewModel() {
     val noteList = combine(
         repository.getAllNote(), _sortOption, _searchOption
     ) { note, option, query ->
-        val filteredNotes = if (query.isEmpty()) {
+        val filteredNotes = if (query.isBlank()) {
             note
         } else {
-            note.filter { it.title.contains(query, ignoreCase = true) }
+            note.filter {
+                it.title.contains(query, ignoreCase = true) ||
+                        it.content.contains(query, ignoreCase = true)
+            }
         }
         when (option) {
             0 -> filteredNotes.sortedByDescending { it.lastTime }

@@ -4,6 +4,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -25,10 +26,25 @@ class MainAdapter(
         RecyclerView.ViewHolder(binding.root) {
         private val dateFormat = SimpleDateFormat("dd/M/yy, HH:mm", Locale.getDefault())
         fun bind(note: NoteItems) {
-            binding.tvNoteTitle.text = note.title
-            val dateString = dateFormat.format(Date(note.lastTime))
-            binding.tvLastEdit.text =
-                binding.root.context.getString(R.string.format_last_edit, dateString)
+            binding.tvNoteTitle.text = highlightText(note.title, currentSearchQuery)
+
+            if (currentSearchQuery.isNotEmpty() && note.content.contains(currentSearchQuery, ignoreCase = true)) {
+                   binding.tvNoteContent.visibility = View.VISIBLE
+                   val snippet = summarizeContent(note.content, currentSearchQuery)
+                   binding.tvNoteContent.text = highlightText(snippet, currentSearchQuery)
+               } else {
+                   binding.tvNoteContent.visibility = View.GONE
+               }
+
+            val isCreationTime = currentSortOption == 4 || currentSortOption == 5
+            val displayTime = if (isCreationTime) note.creationTime else note.lastTime
+            val dateString = dateFormat.format(Date(displayTime))
+            if (isCreationTime) {
+                binding.tvLastEdit.text = binding.root.context.getString(R.string.format_creation_time, dateString)
+            } else {
+                binding.tvLastEdit.text = binding.root.context.getString(R.string.format_last_edit, dateString)
+            }
+
             val isSelected = selectedIds.contains(note.id)
             if (isSelected) {
                 binding.root.setBackgroundResource(R.drawable.bg_note_selected)
@@ -50,8 +66,6 @@ class MainAdapter(
                 }
                 true
             }
-
-            binding.tvNoteTitle.text = highlightText(note.title, currentSearchQuery)
         }
 
         private fun highlightText(text: String, query: String): SpannableString {
@@ -75,11 +89,32 @@ class MainAdapter(
             }
             return spannable
         }
+
+        private fun summarizeContent(content: String, query: String): String {
+            if (query.isEmpty() || content.isEmpty()) return content
+
+            val lowerContent = content.lowercase()
+            val lowerQuery = query.lowercase()
+            val matchIndex = lowerContent.indexOf(lowerQuery)
+
+            if (matchIndex == -1) return content
+            val contextRadius = 11
+            val startIndex = maxOf(0, matchIndex - contextRadius)
+            val endIndex = minOf(content.length, matchIndex + query.length + contextRadius)
+            var snippet = content.substring(startIndex, endIndex)
+            if (startIndex == 0 || endIndex == content.length) {
+                return "...${snippet.replace("\n", " ")}..."
+            }
+            if (startIndex > 0) snippet = "...$snippet"
+            if (endIndex < content.length) snippet = "$snippet..."
+            return snippet.replace("\n", " ")
+        }
     }
 
     private val selectedIds = mutableSetOf<Int>()
     var isSelectionMode = false
     var currentSearchQuery: String = ""
+    var currentSortOption = 0
 
     fun updateSelection(newSelectedIds: Set<Int>) {
         val oldSelected = selectedIds.toSet()
@@ -100,6 +135,13 @@ class MainAdapter(
         }
     }
 
+    fun updateSortOption(option: Int) {
+        if (currentSortOption != option) {
+            currentSortOption = option
+            notifyItemRangeChanged(0, currentList.size, "UPDATE_TIME_TEXT")
+        }
+    }
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -112,10 +154,14 @@ class MainAdapter(
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int, payloads: MutableList<Any?>) {
-        if (payloads.contains("UPDATE_HIGHLIGHT")) {
-            holder.bind(getItem(position))
-        } else {
-            super.onBindViewHolder(holder, position, payloads)
+        when {
+            payloads.contains("UPDATE_HIGHLIGHT") -> {
+                holder.bind(getItem(position))
+            }
+            payloads.contains("UPDATE_TIME_TEXT") -> {
+                holder.bind(getItem(position))
+            }
+            else -> super.onBindViewHolder(holder, position, payloads)
         }
     }
 }

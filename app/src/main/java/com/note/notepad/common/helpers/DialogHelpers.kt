@@ -8,7 +8,8 @@ import com.note.notepad.common.enums.NoteAction
 object DialogHelpers {
     fun undoAllDialog(
         context: Context,
-        onUndoAll:() -> Unit) {
+        onUndoAll: () -> Unit
+    ) {
         val message = context.getString(R.string.message_undo_all_dialog)
         MaterialAlertDialogBuilder(context)
             .setMessage(message)
@@ -25,7 +26,8 @@ object DialogHelpers {
     fun deleteDialog(
         context: Context,
         noteTitle: String,
-        onDelete: () -> Unit) {
+        onDelete: () -> Unit
+    ) {
         val displayTitle = noteTitle.ifBlank { context.getString(R.string.title_untitled) }
         MaterialAlertDialogBuilder(context)
             .setMessage(context.getString(R.string.delete_dialog_message, displayTitle))
@@ -41,8 +43,12 @@ object DialogHelpers {
 
     fun showItemAction(
         context: Context,
-        onAction: (NoteAction) -> Unit) {
-        val options = arrayOf(context.getString(R.string.option_undelete), context.getString(R.string.option_delete))
+        onAction: (NoteAction) -> Unit
+    ) {
+        val options = arrayOf(
+            context.getString(R.string.option_undelete),
+            context.getString(R.string.option_delete)
+        )
         var selectedOption = 0
         MaterialAlertDialogBuilder(context)
             .setTitle(context.getString(R.string.show_item_action_title))
@@ -65,7 +71,8 @@ object DialogHelpers {
 
     fun clearTrashDialog(
         context: Context,
-        onClear: () -> Unit) {
+        onClear: () -> Unit
+    ) {
         val message = context.getString(R.string.clear_trash_dialog_message)
         MaterialAlertDialogBuilder(context)
             .setMessage(message)
@@ -81,7 +88,8 @@ object DialogHelpers {
 
     fun undeleteAllDialog(
         context: Context,
-        onUndelete: () -> Unit) {
+        onUndelete: () -> Unit
+    ) {
         val message = context.getString(R.string.undelete_all_dialog_message)
         MaterialAlertDialogBuilder(context)
             .setMessage(message)
@@ -97,7 +105,8 @@ object DialogHelpers {
 
     fun deleteSelectedDialog(
         context: Context,
-        onDeleteSelection: () -> Unit) {
+        onDeleteSelection: () -> Unit
+    ) {
         val message = context.getString(R.string.delete_selected_dialog_message)
         MaterialAlertDialogBuilder(context)
             .setMessage(message)
@@ -110,5 +119,24 @@ object DialogHelpers {
             }
             .show()
     }
+
+    fun showConfirmDeleteDialog(
+        context: Context,
+        onDelete: () -> Unit
+    ) {
+        val message = "Delete the selected note?"
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Delete")
+            .setMessage(message)
+            .setPositiveButton("OK") { dialog, _ ->
+                onDelete()
+                dialog.dismiss()
+            }
+            .setNegativeButton("CANCEL") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
 
 }

@@ -11,15 +11,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
+import com.note.notepad.common.helpers.DialogHelpers
 import com.note.notepad.databinding.ActivityMainBinding
 import com.note.notepad.ui.editor.CreateNoteActivity
 import com.note.notepad.ui.main.adapter.MainAdapter
 import com.note.notepad.ui.trash.TrashActivity
+import com.note.notepad.utils.AppConstant
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBar.left, systemBar.top, systemBar.right, systemBar.bottom)
             insets
         }
+
         initView()
         observeData()
     }
@@ -81,7 +85,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun openEditorScreen(noteId: Int) {
         val intent = Intent(this, CreateNoteActivity::class.java)
-        intent.putExtra("EXTRA_NOTE_ID", noteId)
+        intent.putExtra(AppConstant.EXTRA_NOTE_ID, noteId)
+        intent.putExtra(AppConstant.EXTRA_SEARCH_QUERY, viewModel.searchQuery.value)
         startActivity(intent)
     }
 
@@ -118,6 +123,11 @@ class MainActivity : AppCompatActivity() {
                 noteAdapter.updateSearchQuery(query)
             }
         }
+        lifecycleScope.launch {
+            viewModel.sortOption.collect { option ->
+                noteAdapter.updateSortOption(option)
+            }
+        }
     }
 
     private fun updateTbForSelection(isMode: Boolean) {
@@ -137,27 +147,6 @@ class MainActivity : AppCompatActivity() {
             }
             binding.fabAddNote.show()
         }
-    }
-
-    private fun showConfirmDeleteDialog() {
-        val selectedCount = viewModel.selectedIds.value.size
-        val message = if (selectedCount == 1) {
-            "Delete the selected note?"
-        } else {
-            "Delete $selectedCount selected notes?"
-        }
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Delete")
-            .setMessage(message)
-            .setPositiveButton("OK") { dialog, _ ->
-                viewModel.deleteSelectionNotes()
-                dialog.dismiss()
-            }
-            .setNegativeButton("CANCEL") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -209,7 +198,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_delete -> {
-                showConfirmDeleteDialog()
+                DialogHelpers.showConfirmDeleteDialog(this) {
+                    viewModel.deleteSelectionNotes()
+                }
                 true
             }
 

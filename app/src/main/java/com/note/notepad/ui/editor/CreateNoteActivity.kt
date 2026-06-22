@@ -14,6 +14,7 @@ import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
 import com.note.notepad.common.helpers.DialogHelpers
 import com.note.notepad.databinding.ActivityCreateNoteBinding
+import com.note.notepad.utils.AppConstant
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,6 +25,8 @@ class CreateNoteActivity : AppCompatActivity() {
     private lateinit var searchManager: SearchManager
     private var isSearchMode = false
     private var toolBarMenu: Menu ?= null
+    private var pendingQuery = ""
+    private var isNoteLoad = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,7 +46,9 @@ class CreateNoteActivity : AppCompatActivity() {
 
     private fun initView() {
         setSupportActionBar(binding.tbEditor)
-        val noteId = intent.getIntExtra("EXTRA_NOTE_ID", -1)
+        val noteId = intent.getIntExtra(AppConstant.EXTRA_NOTE_ID, -1)
+        pendingQuery = intent.getStringExtra(AppConstant.EXTRA_SEARCH_QUERY) ?: ""
+
         viewModel.loadData(noteId)
         undoNotes = UndoRedoManager(binding.edtContent)
         searchManager = SearchManager(binding.edtContent)
@@ -70,6 +75,8 @@ class CreateNoteActivity : AppCompatActivity() {
                         binding.edtTitle.setText(displayTitle)
                         binding.edtContent.setText(it.content)
                         undoNotes.saveCheckpoints()
+                        isNoteLoad = true
+                        checkAndTriggerSearch()
                     }
                 }
             }
@@ -83,12 +90,55 @@ class CreateNoteActivity : AppCompatActivity() {
         viewModel.saveNote(newTitle, newContent)
     }
 
+    private fun checkAndTriggerSearch() {
+        if (isNoteLoad && pendingQuery.isNotEmpty() && toolBarMenu!= null) {
+            val searchItem = toolBarMenu?.findItem(R.id.menu_search_editor)
+            val searchView = searchItem?.actionView as? SearchView
+
+            binding.tbEditor.post {
+                searchItem?.expandActionView()
+                searchView?.setQuery(pendingQuery, false)
+                searchView?.clearFocus()
+                pendingQuery = ""
+            }
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.editor_appbar, menu)
         toolBarMenu = menu
         val searchItem = menu?.findItem(R.id.menu_search_editor)
         val searchView = searchItem?.actionView as? SearchView
+
+        searchItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                isSearchMode = false
+                menu.findItem(R.id.menu_search_down)?.isVisible = false
+                menu.findItem(R.id.menu_search_up)?.isVisible = false
+                menu.findItem(R.id.menu_search_count)?.isVisible = false
+
+                menu.findItem(R.id.menu_save)?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                menu.findItem(R.id.menu_undo)?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                searchManager.clearSearch()
+                return true
+            }
+
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                isSearchMode = true
+                menu.findItem(R.id.menu_search_down)?.isVisible = true
+                menu.findItem(R.id.menu_search_up)?.isVisible = true
+                menu.findItem(R.id.menu_search_count)?.isVisible = true
+
+                menu.findItem(R.id.menu_save)?.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+                menu.findItem(R.id.menu_undo)?.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+
+                searchView?.post {
+                    searchView.onActionViewExpanded()
+                    searchView.requestFocus()
+                }
+                return true
+            }
+        })
 
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -104,6 +154,7 @@ class CreateNoteActivity : AppCompatActivity() {
             }
 
         })
+        checkAndTriggerSearch()
         return true
     }
 
@@ -113,39 +164,6 @@ class CreateNoteActivity : AppCompatActivity() {
         menu?.findItem(R.id.menu_search_trigger)?.isVisible = !isSearchMode
         menu?.findItem(R.id.menu_search_up)?.isVisible = isSearchMode
         menu?.findItem(R.id.menu_search_count)?.isVisible = isSearchMode
-
-//        menu?.findItem(R.id.menu_save)?.isVisible = !isSearchMode
-//        menu?.findItem(R.id.menu_undo)?.isVisible = !isSearchMode
-//        menu?.findItem(R.id.menu_redo)?.isVisible = !isSearchMode
-//        menu?.findItem(R.id.menu_undo_all)?.isVisible = !isSearchMode
-//        menu?.findItem(R.id.menu_delete)?.isVisible = !isSearchMode
-
-        val searchItem = menu?.findItem(R.id.menu_search_editor)
-        val searchView = searchItem?.actionView as? SearchView
-        val saveItem = menu?.findItem(R.id.menu_save)
-        val undoItem = menu?.findItem(R.id.menu_undo)
-
-        searchItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                isSearchMode = false
-                invalidateOptionsMenu()
-                searchManager.clearSearch()
-                saveItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-                undoItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-                return true
-            }
-
-            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                isSearchMode = true
-                saveItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-                undoItem?.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-                searchView?.post {
-                    searchView.onActionViewExpanded()
-                    searchView.requestFocus()
-                }
-                return true
-            }
-        })
 
         return super.onPrepareOptionsMenu(menu)
     }

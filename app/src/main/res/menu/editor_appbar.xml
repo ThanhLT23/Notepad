@@ -39,18 +39,21 @@
         android:id="@+id/menu_search_down"
         android:icon="@drawable/ic_arrow_down"
         android:title="@string/menu_search_down"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_search_up"
         android:icon="@drawable/ic_arrow_up"
         android:title="@string/menu_search_up"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_search_count"
         android:title="@string/menu_count"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_search_trigger"

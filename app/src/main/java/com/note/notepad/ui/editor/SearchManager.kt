@@ -35,7 +35,7 @@ class SearchManager(private val editText: EditText) {
 
         if (searchResult.isNotEmpty()) {
             currentIndex = 0
-            applyHighlight()
+            applyHighlight(isFocus = false)
         }
         onCountUpdate(getCountText())
     }
@@ -44,7 +44,7 @@ class SearchManager(private val editText: EditText) {
         return if (searchResult.isEmpty()) "0/0" else "${currentIndex + 1}/${searchResult.size}"
     }
 
-    private fun applyHighlight() {
+    private fun applyHighlight(isFocus: Boolean = false) {
         val editable = editText.text ?: return
         val context = editText.context
         val highlightColor = ContextCompat.getColor(context, R.color.highlightColor)
@@ -64,7 +64,9 @@ class SearchManager(private val editText: EditText) {
             )
         }
         if (currentIndex >= 0 && currentIndex < searchResult.size) {
-            editText.requestFocus()
+            if(isFocus) {
+                editText.requestFocus()
+            }
             editText.setSelection(searchResult[currentIndex].first)
         }
     }
@@ -76,7 +78,7 @@ class SearchManager(private val editText: EditText) {
         } else {
             currentIndex = if (currentIndex - 1 < 0) searchResult.size - 1 else currentIndex -1
         }
-        applyHighlight()
+        applyHighlight(isFocus = true)
         onCountUpdate(getCountText())
     }
 

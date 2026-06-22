@@ -7,16 +7,14 @@
     android:layout_marginHorizontal="@dimen/_2sdp"
     android:layout_marginVertical="@dimen/_2sdp"
     android:background="@drawable/bg_note_item"
-    android:padding="@dimen/_5sdp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="2dp">
+    android:padding="@dimen/_5sdp">
 
     <TextView
         android:id="@+id/tvNoteTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:maxLines="2"
         android:textColor="@color/textColorPrimary"
         android:textSize="@dimen/_18ssp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,16 +23,42 @@
         tools:text="Hi, how are you? (tap to open)" />
 
     <TextView
+        android:id="@+id/tvNoteContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:maxLines="1"
+        android:textColor="@color/textColorSecondary"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNoteTitle"
+        tools:text="...this 1 content..." />
+
+    <TextView
+        android:id="@+id/tvNoteCategorize"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:textColor="@color/textColorSecondary"
+        android:textSize="@dimen/_12ssp"
+        android:maxLength="24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvLastEdit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNoteContent"
+        tools:text="Work" />
+    <TextView
         android:id="@+id/tvLastEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_4sdp"
         android:textColor="@color/textColorPrimary"
         android:textSize="@dimen/_14ssp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvNoteTitle"
+        app:layout_constraintTop_toTopOf="@id/tvNoteCategorize"
         tools:text="Last edit: 15/6/26, 14:25" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
