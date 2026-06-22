@@ -24,20 +24,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primaryColor"
-                app:titleTextColor="@color/white"
-                app:title="@string/menu_title"
-                app:navigationIcon="@drawable/ic_menu"
                 android:theme="@style/MyThemeOverlay_Toolbar"
-                tools:menu="@menu/menu_appbar"/>
+                app:navigationIcon="@drawable/ic_menu"
+                app:title="@string/menu_title"
+                app:titleTextColor="@color/white"
+                tools:menu="@menu/menu_appbar" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMain"
             android:layout_width="0dp"
             android:layout_height="0dp"
-
-            android:padding="@dimen/_5sdp"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,27 +42,30 @@
             tools:itemCount="4"
             tools:listitem="@layout/item_note" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAddNote"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_20sdp"
-            android:layout_marginBottom="@dimen/_55sdp"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddNote"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_18sdp"
+            android:background="@drawable/rounded_btn_bg"
             android:contentDescription="@string/todo"
-            android:src="@drawable/ic_add"
-            app:backgroundTint="@color/primaryColor"
-            app:tint="@color/white"
+            app:backgroundTint="@null"
+            app:icon="@drawable/ic_add"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navMain"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/menu_drawer"/>
+        app:menu="@menu/menu_drawer" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

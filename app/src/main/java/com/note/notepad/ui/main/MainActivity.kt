@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         binding.rvMain.adapter = noteAdapter
         binding.rvMain.itemAnimator = null
 
-        binding.fabAddNote.setOnClickListener {
+        binding.btnAddNote.setOnClickListener {
             viewModel.onFabClicked()
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -138,14 +139,14 @@ class MainActivity : AppCompatActivity() {
                 viewModel.clearSelection()
                 viewModel.exitSelectionMode()
             }
-            binding.fabAddNote.hide()
+            binding.btnAddNote.visibility = View.GONE
         } else {
             binding.tbMain.setTitle(R.string.app_name)
             binding.tbMain.setNavigationIcon(R.drawable.ic_menu)
             binding.tbMain.setNavigationOnClickListener {
                 binding.dlMain.open()
             }
-            binding.fabAddNote.show()
+            binding.btnAddNote.visibility = View.VISIBLE
         }
     }
 
