@@ -216,7 +216,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.menu_sort -> {
-                sortNotesDialog()
+                DialogHelpers.sortNotesDialog(this, currentSortOption) { option ->
+                    currentSortOption = option
+                    viewModel.sortNotes(option)
+                }
                 true
             }
 
@@ -238,30 +241,6 @@ class MainActivity : AppCompatActivity() {
             binding.dlMain.close()
             true
         }
-    }
-
-    private fun sortNotesDialog() {
-        val options = arrayOf(
-            "edit date: from newest",
-            "edit date: from oldest",
-            "title: A to Z",
-            "title: Z to A",
-            "creation date: from newest",
-            "creation date: from oldest"
-        )
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Sort by")
-            .setSingleChoiceItems(options, currentSortOption) { _, option ->
-                currentSortOption = option
-            }
-            .setPositiveButton("SORT") { dialog, _ ->
-                viewModel.sortNotes(currentSortOption)
-                dialog.dismiss()
-            }
-            .setNegativeButton("CANCEL") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
     }
 
 }

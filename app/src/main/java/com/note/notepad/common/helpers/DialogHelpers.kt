@@ -124,19 +124,47 @@ object DialogHelpers {
         context: Context,
         onDelete: () -> Unit
     ) {
-        val message = "Delete the selected note?"
+        val message = context.getString(R.string.show_confirm_delete_dialog_message)
         MaterialAlertDialogBuilder(context)
-            .setTitle("Delete")
+            .setTitle(context.getString(R.string.delete_title))
             .setMessage(message)
-            .setPositiveButton("OK") { dialog, _ ->
+            .setPositiveButton(context.getString(R.string.option_ok)) { dialog, _ ->
                 onDelete()
                 dialog.dismiss()
             }
-            .setNegativeButton("CANCEL") { dialog, _ ->
+            .setNegativeButton(context.getString(R.string.option_cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
     }
 
+    fun sortNotesDialog(
+        context: Context,
+        currentOption: Int,
+        onSortAction: (Int) -> Unit
+    ) {
+        val options = arrayOf(
+            "edit date: from newest",
+            "edit date: from oldest",
+            "title: A to Z",
+            "title: Z to A",
+            "creation date: from newest",
+            "creation date: from oldest"
+        )
+        var selectedOption = currentOption
+        MaterialAlertDialogBuilder(context)
+            .setTitle(context.getString(R.string.sort_note_dialog_title))
+            .setSingleChoiceItems(options, currentOption) { _, option ->
+                selectedOption = option
+            }
+            .setPositiveButton(context.getString(R.string.sort_option)) { dialog, _ ->
+                onSortAction(selectedOption)
+                dialog.dismiss()
+            }
+            .setNegativeButton(context.getString(R.string.option_cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
 
 }

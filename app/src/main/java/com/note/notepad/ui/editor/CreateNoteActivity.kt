@@ -63,7 +63,7 @@ class CreateNoteActivity : AppCompatActivity() {
             } else {
                 val isSaved = autoSave()
                 if (isSaved) {
-                    Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.note_saved_toast), Toast.LENGTH_SHORT).show()
                 }
                 onBackPressedDispatcher.onBackPressed()
             }
@@ -75,7 +75,7 @@ class CreateNoteActivity : AppCompatActivity() {
             viewModel.currentNote.collect { note ->
                 note?.let {
                     if (binding.edtTitle.text.isEmpty() && binding.edtContent.text.isEmpty()) {
-                        val displayTitle = if (it.title == "Untitled") "" else it.title
+                        val displayTitle = if (it.title == getString(R.string.title_untitled)) "" else it.title
                         binding.edtTitle.setText(displayTitle)
                         binding.edtContent.setText(it.content)
                         lastSavedTitle = displayTitle
@@ -185,7 +185,7 @@ class CreateNoteActivity : AppCompatActivity() {
             R.id.menu_save -> {
                 val isSaved = autoSave()
                 if (isSaved) {
-                    Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.note_saved_toast), Toast.LENGTH_SHORT).show()
                 }
                 true
             }

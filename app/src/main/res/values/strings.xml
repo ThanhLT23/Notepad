@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Notepad</string>
     <string name="fab_des">Add note</string>
     <string name="search_menu">search menu</string>
@@ -9,8 +9,8 @@
     <string name="todo">TODO</string>
     <string name="save_menu">SAVE</string>
     <string name="undo_menu">UNDO</string>
-    <string name="note_title">Enter title...</string>
-    <string name="note_content">Enter text...</string>
+    <string name="note_title">Enter title…</string>
+    <string name="note_content">Enter text…</string>
     <string name="format_last_edit">Last edit: %s</string>
     <string name="format_creation_time">Created: %s</string>
     <string name="menu_delete">delete</string>
@@ -33,7 +33,7 @@
     <string name="title_untitled">Untitled</string>
     <string name="delete_dialog_message">The \'%1$s\' note will be deleted. Are you sure?</string>
     <string name="option_delete">DELETE</string>
-    <string name="option_cancel">CANCEL</string>
+    <string name="option_cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="option_undelete">Undelete</string>
     <string name="show_item_action_title">Select an action for the note:</string>
     <string name="option_ok">OK</string>
@@ -45,4 +45,9 @@
     <string name="menu_search_up">Previous</string>
     <string name="menu_count">0/0</string>
     <string name="menu_search_trigger">Search</string>
+    <string name="note_saved_toast">Note saved</string>
+    <string name="show_confirm_delete_dialog_message">Delete the selected note?</string>
+    <string name="delete_title">Delete</string>
+    <string name="sort_note_dialog_title">Sort by</string>
+    <string name="sort_option">SORT</string>
 </resources>
