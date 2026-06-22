@@ -24,9 +24,11 @@ class CreateNoteActivity : AppCompatActivity() {
     private lateinit var undoNotes: UndoRedoManager
     private lateinit var searchManager: SearchManager
     private var isSearchMode = false
-    private var toolBarMenu: Menu ?= null
+    private var toolBarMenu: Menu? = null
     private var pendingQuery = ""
     private var isNoteLoad = false
+    private var lastSavedTitle = ""
+    private var lastSavedContent = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,8 +61,10 @@ class CreateNoteActivity : AppCompatActivity() {
             if (isSearchMode) {
                 toolBarMenu?.findItem(R.id.menu_search_editor)?.collapseActionView()
             } else {
-                autoSave()
-                Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
+                val isSaved = autoSave()
+                if (isSaved) {
+                    Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
+                }
                 onBackPressedDispatcher.onBackPressed()
             }
         }
@@ -71,9 +75,11 @@ class CreateNoteActivity : AppCompatActivity() {
             viewModel.currentNote.collect { note ->
                 note?.let {
                     if (binding.edtTitle.text.isEmpty() && binding.edtContent.text.isEmpty()) {
-                        val displayTitle = if(it.title== "Untitled") "" else it.title
+                        val displayTitle = if (it.title == "Untitled") "" else it.title
                         binding.edtTitle.setText(displayTitle)
                         binding.edtContent.setText(it.content)
+                        lastSavedTitle = displayTitle
+                        lastSavedContent = it.content
                         undoNotes.saveCheckpoints()
                         isNoteLoad = true
                         checkAndTriggerSearch()
@@ -83,15 +89,21 @@ class CreateNoteActivity : AppCompatActivity() {
         }
     }
 
-    private fun autoSave() {
-        val newTitle = binding.edtTitle.text.toString()
-        val newContent = binding.edtContent.text.toString()
+    private fun autoSave(): Boolean {
+        val currentTitle = binding.edtTitle.text.toString()
+        val currentContent = binding.edtContent.text.toString()
 
-        viewModel.saveNote(newTitle, newContent)
+        if (currentTitle == lastSavedTitle && currentContent == lastSavedContent) return false
+
+        viewModel.saveNote(currentTitle, currentContent)
+        lastSavedTitle = currentTitle
+        lastSavedContent = currentContent
+
+        return true
     }
 
     private fun checkAndTriggerSearch() {
-        if (isNoteLoad && pendingQuery.isNotEmpty() && toolBarMenu!= null) {
+        if (isNoteLoad && pendingQuery.isNotEmpty() && toolBarMenu != null) {
             val searchItem = toolBarMenu?.findItem(R.id.menu_search_editor)
             val searchView = searchItem?.actionView as? SearchView
 
@@ -142,7 +154,7 @@ class CreateNoteActivity : AppCompatActivity() {
 
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
-                searchManager.onSearch(newText.orEmpty()) {countText ->
+                searchManager.onSearch(newText.orEmpty()) { countText ->
                     toolBarMenu?.findItem(R.id.menu_search_count)?.title = countText
                 }
                 return true
@@ -169,20 +181,25 @@ class CreateNoteActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.menu_save -> {
-                autoSave()
-                Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
+                val isSaved = autoSave()
+                if (isSaved) {
+                    Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
+                }
                 true
             }
+
             R.id.menu_undo -> {
                 undoNotes.undo()
                 true
             }
+
             R.id.menu_redo -> {
                 undoNotes.redo()
                 true
             }
+
             R.id.menu_search_trigger -> {
                 isSearchMode = true
                 invalidateOptionsMenu()
@@ -191,24 +208,28 @@ class CreateNoteActivity : AppCompatActivity() {
                 }
                 true
             }
+
             R.id.menu_search_up -> {
                 searchManager.navigateSearch(isForward = true) { countText ->
                     toolBarMenu?.findItem(R.id.menu_search_count)?.title = countText
                 }
                 true
             }
+
             R.id.menu_search_down -> {
                 searchManager.navigateSearch(isForward = false) { countText ->
                     toolBarMenu?.findItem(R.id.menu_search_count)?.title = countText
                 }
                 true
             }
+
             R.id.menu_undo_all -> {
                 DialogHelpers.undoAllDialog(this) {
                     undoNotes.undoAll()
                 }
                 true
             }
+
             R.id.menu_delete -> {
                 val currentTitle = binding.edtTitle.text.toString()
                 DialogHelpers.deleteDialog(this, currentTitle) {
@@ -217,6 +238,7 @@ class CreateNoteActivity : AppCompatActivity() {
                 }
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
