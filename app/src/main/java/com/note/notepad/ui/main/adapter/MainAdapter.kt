@@ -59,7 +59,7 @@ class MainAdapter(
             if (query.isEmpty()) return spannable
 
             val lowerText = text.lowercase()
-            val lowerQuery = text.lowercase()
+            val lowerQuery = query.lowercase()
             var startPos = lowerText.indexOf(lowerQuery)
 
             val color = ContextCompat.getColor(binding.root.context, R.color.highlightColor)

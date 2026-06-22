@@ -11,12 +11,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
 import com.note.notepad.common.enums.NoteAction
 import com.note.notepad.common.helpers.DialogHelpers
-import com.note.notepad.data.local.model.NoteItems
 import com.note.notepad.databinding.ActivityTrashBinding
 import com.note.notepad.ui.main.MainActivity
 import com.note.notepad.ui.main.adapter.MainAdapter
@@ -150,15 +148,21 @@ class TrashActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_empty_trash -> {
-                clearTrashDialog()
+                DialogHelpers.clearTrashDialog(this) {
+                    viewModel.clearTrash()
+                }
                 true
             }
             R.id.menu_undelete_all -> {
-                undeleteAllDialog()
+                DialogHelpers.undeleteAllDialog(this) {
+                    viewModel.restoreAllTrash()
+                }
                 true
             }
             R.id.menu_selected_delete -> {
-                deleteSelectedDialog()
+                DialogHelpers.deleteSelectedDialog(this) {
+                    viewModel.hardDelete()
+                }
                 true
             }
 
@@ -180,47 +184,5 @@ class TrashActivity : AppCompatActivity() {
             binding.dlTrash.close()
             true
         }
-    }
-
-    private fun clearTrashDialog() {
-        val message = "All trashed notes will be deleted permanently. Are you sure that you want to delete all of the trashed notes?"
-        MaterialAlertDialogBuilder(this)
-            .setMessage(message)
-            .setPositiveButton("YES") { dialog, _ ->
-                viewModel.clearTrash()
-                dialog.dismiss()
-            }
-            .setNegativeButton("NO") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    private fun undeleteAllDialog() {
-        val message = "Restore all notes?"
-        MaterialAlertDialogBuilder(this)
-            .setMessage(message)
-            .setPositiveButton("YES") { dialog, _ ->
-                viewModel.restoreAllTrash()
-                dialog.dismiss()
-            }
-            .setNegativeButton("NO") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    private fun deleteSelectedDialog() {
-        val message = "Are you sure that you want to delete the selected notes? The notes will be deleted permanently."
-        MaterialAlertDialogBuilder(this)
-            .setMessage(message)
-            .setPositiveButton("OK") { dialog, _ ->
-                viewModel.hardDelete()
-                dialog.dismiss()
-            }
-            .setNegativeButton("CANCEL") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
     }
 }

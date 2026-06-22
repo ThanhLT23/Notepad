@@ -14,6 +14,7 @@ class CreateNoteViewModel(private val repository: NoteRepository) : ViewModel() 
 
 
 
+
     fun loadData(noteId: Int) {
         if (noteId == -1) return
 
