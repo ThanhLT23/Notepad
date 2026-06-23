@@ -52,4 +52,7 @@
     <string name="sort_option">SORT</string>
     <string name="count_status">0/0</string>
     <string name="notepad_header">Notepad Free</string>
+    <string name="categories_title">Categories</string>
+    <string name="edtCate_hint">New category name</string>
+    <string name="add_cate_btn">ADD</string>
 </resources>

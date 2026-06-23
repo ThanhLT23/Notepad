@@ -237,10 +237,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.itTrash -> {
                     binding.dlMain.close()
                     val intent = Intent(this@MainActivity, TrashActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     startActivity(intent)
-                    finish()
-                    overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, 0, 0)
                 }
 
                 R.id.itNote -> {
