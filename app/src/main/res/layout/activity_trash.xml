@@ -5,7 +5,8 @@
     android:id="@+id/dlTrash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.trash.TrashActivity">
+    tools:context=".ui.trash.TrashActivity"
+    tools:openDrawer="start">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
@@ -48,11 +49,21 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_235sdp"
         android:layout_height="match_parent"
         android:id="@+id/navTrash"
+        app:drawerLayoutCornerSize="0dp"
+        android:layout_marginTop="24dp"
         android:layout_gravity="start"
-        app:menu="@menu/menu_drawer"/>
+        android:fitsSystemWindows="true"
+        app:dividerInsetStart="0dp"
+        app:dividerInsetEnd="0dp"
+        app:itemShapeInsetStart="0dp"
+        app:itemShapeInsetEnd="0dp"
+        app:itemShapeAppearance="@null"
+        android:background="@color/backgroundColor"
+        app:menu="@menu/menu_drawer"
+        app:headerLayout="@layout/nav_header"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
 

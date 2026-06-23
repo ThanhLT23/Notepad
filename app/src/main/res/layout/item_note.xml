@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/_2sdp"
-    android:layout_marginVertical="@dimen/_2sdp"
+    android:layout_margin="@dimen/_2sdp"
     android:background="@drawable/bg_note_item"
-    android:padding="@dimen/_5sdp">
+    android:paddingTop="@dimen/_6sdp"
+    android:paddingBottom="@dimen/_4sdp"
+    android:orientation="vertical">
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_6sdp"
+    android:layout_marginStart="@dimen/_12sdp"
+    android:orientation="vertical">
     <TextView
         android:id="@+id/tvNoteTitle"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/textColorPrimary"
-        android:textSize="@dimen/_18ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="@dimen/_14ssp"
         tools:text="Hi, how are you? (tap to open)" />
 
     <TextView
         android:id="@+id/tvNoteContent"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_6sdp"
         android:maxLines="1"
         android:textColor="@color/textColorSecondary"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvNoteTitle"
+        android:textSize="@dimen/_12ssp"
         tools:text="...this 1 content..." />
 
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/_8sdp"
+    android:layout_marginStart="@dimen/_12sdp">
     <TextView
         android:id="@+id/tvNoteCategorize"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_4sdp"
         android:textColor="@color/textColorSecondary"
-        android:textSize="@dimen/_12ssp"
+        android:textSize="@dimen/_9ssp"
         android:maxLength="24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvLastEdit"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvNoteContent"
         tools:text="Work" />
     <TextView
         android:id="@+id/tvLastEdit"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         android:textColor="@color/textColorPrimary"
-        android:textSize="@dimen/_14ssp"
+        android:textSize="@dimen/_10ssp"
+        android:gravity="end"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvNoteCategorize"
         tools:text="Last edit: 15/6/26, 14:25" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+
+
+</LinearLayout>

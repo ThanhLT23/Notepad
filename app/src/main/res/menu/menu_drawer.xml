@@ -1,26 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:id="@+id/grNote">
+    <group android:id="@+id/groupNote">
         <item
             android:id="@+id/itNote"
             android:icon="@drawable/ic_note"
             android:title="@string/menu_notes" />
     </group>
+
     <item android:title="@string/menu_categories">
         <menu>
+            <group android:id="@+id/grItemCategory" />
             <group android:id="@+id/grCategory">
                 <item
-                    android:id="@+id/itCategory"
-                    android:title="@string/item_edit_categories" />
+                    android:id="@+id/itUncategorized"
+                    android:title="Uncategorized"
+                    android:icon="@drawable/ic_uncategory"/>
+                <item
+                    android:id="@+id/itEditCategory"
+                    android:title="@string/item_edit_categories"
+                    android:icon="@drawable/ic_edit_cate"/>
             </group>
         </menu>
     </item>
-    <group android:id="@+id/grTools">
+    <group android:id="@+id/grData">
         <item
             android:id="@+id/itBackup"
-            android:title="Backup" />
+            android:title="Backup"
+            android:icon="@drawable/ic_backup"/>
         <item
             android:id="@+id/itTrash"
-            android:title="Trash" />
+            android:title="Trash"
+            android:icon="@drawable/ic_trash"/>
+    </group>
+    <group android:id="@+id/grSetting">
+        <item
+            android:id="@+id/itSetting"
+            android:title="Setting"
+            android:icon="@drawable/ic_setting"/>
+        <item
+            android:id="@+id/itRate"
+            android:title="Rate the app"
+            android:icon="@drawable/ic_rate"/>
+        <item
+            android:id="@+id/itHelp"
+            android:title="Help"
+            android:icon="@drawable/ic_help"/>
+        <item
+            android:id="@+id/itPolicy"
+            android:title="Privacy policy"
+            android:icon="@drawable/ic_policy"/>
     </group>
 </menu>

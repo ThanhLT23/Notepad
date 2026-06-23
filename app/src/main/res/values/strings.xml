@@ -50,4 +50,6 @@
     <string name="delete_title">Delete</string>
     <string name="sort_note_dialog_title">Sort by</string>
     <string name="sort_option">SORT</string>
+    <string name="count_status">0/0</string>
+    <string name="notepad_header">Notepad Free</string>
 </resources>

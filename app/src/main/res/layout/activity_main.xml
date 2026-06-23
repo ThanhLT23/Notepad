@@ -5,10 +5,12 @@
     android:id="@+id/dlMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.main.MainActivity"
+    tools:openDrawer="start">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/backgroundColor">
@@ -62,10 +64,20 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navMain"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_235sdp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/menu_drawer" />
+        app:drawerLayoutCornerSize="0dp"
+        android:layout_marginTop="24dp"
+        android:fitsSystemWindows="true"
+        app:dividerInsetStart="0dp"
+        app:dividerInsetEnd="0dp"
+        app:itemShapeInsetStart="0dp"
+        app:itemShapeInsetEnd="0dp"
+        app:itemShapeAppearance="@null"
+        android:background="@color/backgroundColor"
+        app:menu="@menu/menu_drawer"
+        app:headerLayout="@layout/nav_header"/>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

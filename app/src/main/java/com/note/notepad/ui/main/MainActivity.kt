@@ -13,6 +13,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -71,9 +74,11 @@ class MainActivity : AppCompatActivity() {
                         viewModel.clearSelection()
                         viewModel.exitSelectionMode()
                     }
+
                     searchItem?.isActionViewExpanded == true -> {
                         searchItem.collapseActionView()
                     }
+
                     else -> {
                         finish()
                     }
@@ -139,14 +144,13 @@ class MainActivity : AppCompatActivity() {
                 viewModel.clearSelection()
                 viewModel.exitSelectionMode()
             }
-            binding.btnAddNote.visibility = View.GONE
+            binding.btnAddNote.isGone = true
         } else {
             binding.tbMain.setTitle(R.string.app_name)
-            binding.tbMain.setNavigationIcon(R.drawable.ic_menu)
             binding.tbMain.setNavigationOnClickListener {
                 binding.dlMain.open()
             }
-            binding.btnAddNote.visibility = View.VISIBLE
+            binding.btnAddNote.isVisible = true
         }
     }
 
@@ -231,16 +235,20 @@ class MainActivity : AppCompatActivity() {
         binding.navMain.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.itTrash -> {
-                    startActivity(Intent(this@MainActivity, TrashActivity::class.java))
+                    binding.dlMain.close()
+                    val intent = Intent(this@MainActivity, TrashActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    startActivity(intent)
+                    finish()
+                    overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, 0, 0)
                 }
 
                 R.id.itNote -> {
                     binding.dlMain.close()
                 }
             }
-            binding.dlMain.close()
             true
         }
     }
-
 }
+

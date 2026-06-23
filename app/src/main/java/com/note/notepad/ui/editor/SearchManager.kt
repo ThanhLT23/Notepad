@@ -19,7 +19,7 @@ class SearchManager(private val editText: EditText) {
         val oldSpan = editable.getSpans(0, editable.length, BackgroundColorSpan::class.java)
         for (span in oldSpan)   editable.removeSpan(span)
         if (query.isEmpty()) {
-            onCountUpdate("0/0")
+            onCountUpdate(editText.context.getString(R.string.count_status))
             return
         }
 
@@ -41,7 +41,7 @@ class SearchManager(private val editText: EditText) {
     }
 
     private fun getCountText(): String {
-        return if (searchResult.isEmpty()) "0/0" else "${currentIndex + 1}/${searchResult.size}"
+        return if (searchResult.isEmpty()) editText.context.getString(R.string.count_status) else "${currentIndex + 1}/${searchResult.size}"
     }
 
     private fun applyHighlight(isFocus: Boolean = false) {

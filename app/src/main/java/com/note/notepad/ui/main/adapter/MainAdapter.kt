@@ -7,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.note.notepad.R
 import com.note.notepad.data.local.model.NoteItems
 import com.note.notepad.databinding.ItemNoteBinding
+import com.note.notepad.utils.AppConstant
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -24,7 +26,7 @@ class MainAdapter(
 
     inner class MainViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        private val dateFormat = SimpleDateFormat("dd/M/yy, HH:mm", Locale.getDefault())
+        private val dateFormat = SimpleDateFormat(AppConstant.DATE_FORMAT, Locale.getDefault())
         fun bind(note: NoteItems) {
             binding.tvNoteTitle.text = highlightText(note.title, currentSearchQuery)
 
@@ -33,7 +35,7 @@ class MainAdapter(
                    val snippet = summarizeContent(note.content, currentSearchQuery)
                    binding.tvNoteContent.text = highlightText(snippet, currentSearchQuery)
                } else {
-                   binding.tvNoteContent.visibility = View.GONE
+                   binding.tvNoteContent.isGone = true
                }
 
             val isCreationTime = currentSortOption == 4 || currentSortOption == 5
@@ -131,14 +133,14 @@ class MainAdapter(
     fun updateSearchQuery(query: String) {
         if (currentSearchQuery != query) {
             currentSearchQuery = query
-            notifyItemRangeChanged(0, currentList.size, "UPDATE_HIGHLIGHT")
+            notifyItemRangeChanged(0, currentList.size, AppConstant.UPDATE_HIGHLIGHT)
         }
     }
 
     fun updateSortOption(option: Int) {
         if (currentSortOption != option) {
             currentSortOption = option
-            notifyItemRangeChanged(0, currentList.size, "UPDATE_TIME_TEXT")
+            notifyItemRangeChanged(0, currentList.size, AppConstant.UPDATE_TIME_TEXT)
         }
     }
 
@@ -155,10 +157,10 @@ class MainAdapter(
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int, payloads: MutableList<Any?>) {
         when {
-            payloads.contains("UPDATE_HIGHLIGHT") -> {
+            payloads.contains(AppConstant.UPDATE_HIGHLIGHT) -> {
                 holder.bind(getItem(position))
             }
-            payloads.contains("UPDATE_TIME_TEXT") -> {
+            payloads.contains(AppConstant.UPDATE_TIME_TEXT) -> {
                 holder.bind(getItem(position))
             }
             else -> super.onBindViewHolder(holder, position, payloads)
