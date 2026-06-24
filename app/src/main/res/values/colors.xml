@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="red">#D32F2F</color>
     <!-- Brand Colors -->
     <color name="primaryColor">#917754</color>
     <color name="secondColor">#74664F</color>

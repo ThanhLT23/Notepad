@@ -21,15 +21,6 @@ class CategoryEditorViewModel(private val repository: CategoryRepository): ViewM
         initialValue = emptyList<CategoryItems>()
     )
 
-    fun loadCate(cateId: Int) {
-        if (cateId == -1) return
-
-        viewModelScope.launch {
-            val category = repository.getCategoryById(cateId)
-            _currentCate.value = category
-        }
-    }
-
     fun addCategory(name: String) {
         val newName = name.trim()
         if (newName.isBlank()) return
@@ -62,5 +53,14 @@ class CategoryEditorViewModel(private val repository: CategoryRepository): ViewM
             viewModelScope.launch {
                 repository.deleteCategory(category)
             }
+    }
+
+    fun updateCategoryPositions(newList: List<CategoryItems>) {
+        viewModelScope.launch {
+            val updatedList = newList.mapIndexed { index, category ->
+                category.copy(position = index)
+            }
+            repository.updateCategories(updatedList)
+        }
     }
 }

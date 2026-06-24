@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoryDao {
-    @Query("SELECT * FROM categories")
+    @Query("SELECT * FROM categories ORDER BY position ASC")
     fun getAllCategories(): Flow<List<CategoryItems>>
 
     @Query("SELECT * FROM categories WHERE id = :categoryId LIMIT 1")
@@ -25,6 +25,9 @@ interface CategoryDao {
 
     @Update
     suspend fun updateCategory(category: CategoryItems)
+
+    @Update
+    suspend fun updateCategories(categories: List<CategoryItems>)
 
     @Delete
     suspend fun deleteCategory(category: CategoryItems)

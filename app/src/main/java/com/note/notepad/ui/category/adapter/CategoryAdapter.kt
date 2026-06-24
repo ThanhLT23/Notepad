@@ -13,7 +13,8 @@ class CategoryAdapter(
     private val onDeleteClick: (CategoryItems) -> Unit
 ) : ListAdapter<CategoryItems, CategoryAdapter.CategoryViewHolder>(CategoryDiffCallback()) {
 
-    inner class CategoryViewHolder(val binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CategoryViewHolder(val binding: ItemCategoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CategoryItems) {
             binding.tvCateName.text = item.name
             binding.ivEditCate.setOnClickListener {
@@ -22,12 +23,12 @@ class CategoryAdapter(
             binding.ivDeleteCate.setOnClickListener {
                 onDeleteClick(item)
             }
-
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val binding = ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CategoryViewHolder(binding)
     }
 
@@ -37,6 +38,9 @@ class CategoryAdapter(
 }
 
 class CategoryDiffCallback : DiffUtil.ItemCallback<CategoryItems>() {
-    override fun areItemsTheSame(oldItem: CategoryItems, newItem: CategoryItems) = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: CategoryItems, newItem: CategoryItems) = oldItem == newItem
+    override fun areItemsTheSame(oldItem: CategoryItems, newItem: CategoryItems) =
+        oldItem.id == newItem.id
+
+    override fun areContentsTheSame(oldItem: CategoryItems, newItem: CategoryItems) =
+        oldItem == newItem
 }

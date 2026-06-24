@@ -7,17 +7,21 @@
             android:title="@string/menu_notes" />
     </group>
 
-    <item android:title="@string/menu_categories">
+    <item
+        android:id="@+id/itCategoriesParent"
+        android:title="@string/menu_categories">
         <menu>
             <group android:id="@+id/grItemCategory" />
             <group android:id="@+id/grCategory">
                 <item
                     android:id="@+id/itUncategorized"
                     android:title="Uncategorized"
+                    android:orderInCategory="998"
                     android:icon="@drawable/ic_uncategory"/>
                 <item
                     android:id="@+id/itEditCategory"
                     android:title="@string/item_edit_categories"
+                    android:orderInCategory="999"
                     android:icon="@drawable/ic_edit_cate"/>
             </group>
         </menu>

@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
 import com.note.notepad.common.helpers.DialogHelpers
+import com.note.notepad.data.local.model.CategoryItems
 import com.note.notepad.databinding.ActivityMainBinding
 import com.note.notepad.ui.category.CategoryEditorActivity
 import com.note.notepad.ui.editor.CreateNoteActivity
@@ -130,6 +132,11 @@ class MainActivity : AppCompatActivity() {
                 noteAdapter.updateSortOption(option)
             }
         }
+        lifecycleScope.launch {
+            viewModel.categories.collect { category ->
+                updateDrawerCategory(category)
+            }
+        }
     }
 
     private fun updateTbForSelection(isMode: Boolean) {
@@ -148,6 +155,27 @@ class MainActivity : AppCompatActivity() {
                 binding.dlMain.open()
             }
             binding.btnAddNote.isVisible = true
+        }
+    }
+
+
+    private fun updateDrawerCategory(categories: List<CategoryItems>) {
+        val menu = binding.navMain.menu
+
+        val categoriesParent = menu.findItem(R.id.itCategoriesParent)
+        val menuSub = categoriesParent.subMenu ?: return
+        menuSub.removeGroup(R.id.grItemCategory)
+        menuSub.findItem(R.id.itUncategorized)?.isVisible = categories.isNotEmpty()
+
+        categories.forEachIndexed { index, category ->
+            menuSub.add(R.id.grItemCategory, category.id, index, category.name).apply {
+                icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_category)
+
+                setOnMenuItemClickListener {
+                    binding.dlMain.close()
+                    true
+                }
+            }
         }
     }
 
@@ -234,12 +262,14 @@ class MainActivity : AppCompatActivity() {
                 R.id.itNote -> {
                     binding.dlMain.close()
                 }
+
                 R.id.itEditCategory -> {
                     binding.dlMain.close()
                     val intent = Intent(this@MainActivity, CategoryEditorActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     startActivity(intent)
                 }
+
                 R.id.itTrash -> {
                     binding.dlMain.close()
                     val intent = Intent(this@MainActivity, TrashActivity::class.java)

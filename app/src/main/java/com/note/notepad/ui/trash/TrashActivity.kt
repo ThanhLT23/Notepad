@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +16,9 @@ import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
 import com.note.notepad.common.enums.NoteAction
 import com.note.notepad.common.helpers.DialogHelpers
+import com.note.notepad.data.local.model.CategoryItems
 import com.note.notepad.databinding.ActivityTrashBinding
+import com.note.notepad.ui.category.CategoryEditorActivity
 import com.note.notepad.ui.main.MainActivity
 import com.note.notepad.ui.main.adapter.MainAdapter
 import kotlinx.coroutines.launch
@@ -101,6 +104,11 @@ class TrashActivity : AppCompatActivity() {
                 invalidateOptionsMenu()
             }
         }
+        lifecycleScope.launch {
+            viewModel.categories.collect { category ->
+                updateDrawerCategory(category)
+            }
+        }
 
     }
 
@@ -178,14 +186,38 @@ class TrashActivity : AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     startActivity(intent)
-
                 }
-
                 R.id.itTrash -> {
                     binding.dlTrash.close()
                 }
+                R.id.itEditCategory -> {
+                    binding.dlTrash.close()
+                    val intent = Intent(this, CategoryEditorActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    startActivity(intent)
+                }
             }
             true
+        }
+    }
+
+    private fun updateDrawerCategory(categories: List<CategoryItems>) {
+        val menu = binding.navTrash.menu
+
+        val categoriesParent = menu.findItem(R.id.itCategoriesParent)
+        val menuSub = categoriesParent.subMenu ?: return
+        menuSub.removeGroup(R.id.grItemCategory)
+        menuSub.findItem(R.id.itUncategorized)?.isVisible = categories.isNotEmpty()
+
+        categories.forEachIndexed { index, category ->
+            menuSub.add(R.id.grItemCategory, category.id, index, category.name).apply {
+                icon = ContextCompat.getDrawable(this@TrashActivity, R.drawable.ic_category)
+
+                setOnMenuItemClickListener {
+                    binding.dlTrash.close()
+                    true
+                }
+            }
         }
     }
 }

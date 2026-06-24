@@ -1,8 +1,12 @@
 package com.note.notepad.common.helpers
 
 import android.content.Context
+import android.graphics.Color
 import android.text.InputFilter
+import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
@@ -174,14 +178,47 @@ object DialogHelpers {
         context: Context,
         currentName: String,
         onSave: (String) -> Unit) {
+        val density = context.resources.displayMetrics.density
+
+        val layout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(
+                (24 * density).toInt(),
+                (8 * density).toInt(),
+                (24 * density).toInt(),
+                0
+            )
+        }
+
         val editText = EditText(context).apply {
             setText(currentName)
             setSelection(currentName.length)
+            isSingleLine = true
             filters = arrayOf(InputFilter.LengthFilter(25))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
         }
+
+        val tvError = TextView(context).apply {
+            setTextColor(context.getColor(R.color.red))
+            textSize = 12f
+            visibility = View.GONE
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = (4 * density).toInt()
+            }
+        }
+
+        layout.addView(editText)
+        layout.addView(tvError)
+
         val dialog = AlertDialog.Builder(context)
             .setTitle("Edit category name")
-            .setView(editText)
+            .setView(layout)
             .setPositiveButton(context.getString(R.string.option_ok), null)
             .setNegativeButton(context.getString(R.string.option_cancel)) { dialog, _ ->
                 dialog.dismiss()
@@ -194,10 +231,12 @@ object DialogHelpers {
                 val newName = editText.text.toString().trim()
                 when {
                     newName.isEmpty() -> {
-                        editText.error = "no no"
+                        tvError.text = "Category name cannot be empty"
+                        tvError.visibility = View.VISIBLE
                     }
                     newName == currentName -> {
-                        editText.error = "no no"
+                        tvError.text = "Category with that name already exists."
+                        tvError.visibility = View.VISIBLE
                     }
                     else -> {
                         onSave(newName)
@@ -207,6 +246,23 @@ object DialogHelpers {
             }
         }
         dialog.show()
+    }
+
+    fun deleteCategoryDialog(
+        context: Context,
+        cateName: String,
+        onDelete: () -> Unit
+    ) {
+        MaterialAlertDialogBuilder(context)
+            .setMessage("Delete category \'$cateName\'? Notes from the category won't be deleted.")
+            .setPositiveButton(context.getString(R.string.option_ok)) { dialog, _ ->
+                onDelete()
+                dialog.dismiss()
+            }
+            .setNegativeButton(context.getString(R.string.option_cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
 }

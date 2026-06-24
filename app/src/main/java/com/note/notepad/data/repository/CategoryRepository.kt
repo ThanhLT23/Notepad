@@ -25,6 +25,10 @@ class CategoryRepository(private val dao: CategoryDao) {
         dao.updateCategory(category)
     }
 
+    suspend fun updateCategories(categories: List<CategoryItems>) = withContext(Dispatchers.IO) {
+        dao.updateCategories(categories)
+    }
+
     suspend fun deleteCategory(category: CategoryItems) = withContext(Dispatchers.IO) {
         dao.deleteCategory(category)
     }
