@@ -5,11 +5,10 @@
     android:id="@+id/dlCategory"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.category.CategoryEditorActivity"
-    >
+    tools:context=".ui.category.CategoryEditorActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
+        android:id="@+id/clCategory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/backgroundColor">
@@ -35,33 +34,34 @@
             android:id="@+id/liAddCate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
             android:layout_margin="@dimen/_2sdp"
-            app:layout_constraintTop_toBottomOf="@+id/ablCategory"
-            app:layout_constraintStart_toStartOf="parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/rvCategory"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/rvCategory">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ablCategory">
 
             <EditText
                 android:id="@+id/edtAddCate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="@string/edtCate_hint"
                 android:layout_weight="1"
-                android:inputType="text"
                 android:autofillHints="text"
+                android:hint="@string/edtCate_hint"
+                android:inputType="text"
+                android:maxLength="25"
                 tools:targetApi="28" />
 
             <Button
                 android:id="@+id/btnAddCate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_cate_btn"
-                android:textSize="@dimen/_12sdp"
-                android:textColor="@color/black"
                 android:background="@drawable/bg_note_item"
-                app:backgroundTint="@null"/>
+                android:text="@string/add_cate_btn"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                app:backgroundTint="@null" />
 
         </LinearLayout>
 
@@ -69,34 +69,33 @@
             android:id="@+id/rvCategory"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/_35sdp"
             android:clipToPadding="false"
             android:padding="@dimen/_5sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/liAddCate"
-            tools:itemCount="2"
-            tools:listitem="@layout/item_note" />
+            tools:itemCount="4"
+            tools:listitem="@layout/item_category" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navCategory"
         android:layout_width="@dimen/_235sdp"
         android:layout_height="match_parent"
-        android:id="@+id/navCategory"
-        app:drawerLayoutCornerSize="0dp"
-        android:layout_marginTop="24dp"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:dividerInsetStart="0dp"
-        app:dividerInsetEnd="0dp"
-        app:itemShapeInsetStart="0dp"
-        app:itemShapeInsetEnd="0dp"
-        app:itemShapeAppearance="@null"
+        android:layout_marginTop="24dp"
         android:background="@color/backgroundColor"
-        app:menu="@menu/menu_drawer"
-        app:headerLayout="@layout/nav_header"/>
+        android:fitsSystemWindows="true"
+        app:dividerInsetEnd="0dp"
+        app:dividerInsetStart="0dp"
+        app:drawerLayoutCornerSize="0dp"
+        app:headerLayout="@layout/nav_header"
+        app:itemShapeAppearance="@null"
+        app:itemShapeInsetEnd="0dp"
+        app:itemShapeInsetStart="0dp"
+        app:menu="@menu/menu_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
 

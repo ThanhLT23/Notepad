@@ -4,25 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
 import com.note.notepad.common.helpers.DialogHelpers
 import com.note.notepad.databinding.ActivityMainBinding
+import com.note.notepad.ui.category.CategoryEditorActivity
 import com.note.notepad.ui.editor.CreateNoteActivity
 import com.note.notepad.ui.main.adapter.MainAdapter
 import com.note.notepad.ui.trash.TrashActivity
@@ -147,6 +143,7 @@ class MainActivity : AppCompatActivity() {
             binding.btnAddNote.isGone = true
         } else {
             binding.tbMain.setTitle(R.string.app_name)
+            binding.tbMain.setNavigationIcon(R.drawable.ic_menu)
             binding.tbMain.setNavigationOnClickListener {
                 binding.dlMain.open()
             }
@@ -234,15 +231,20 @@ class MainActivity : AppCompatActivity() {
     private fun initDrawer() {
         binding.navMain.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.itNote -> {
+                    binding.dlMain.close()
+                }
+                R.id.itEditCategory -> {
+                    binding.dlMain.close()
+                    val intent = Intent(this@MainActivity, CategoryEditorActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                    startActivity(intent)
+                }
                 R.id.itTrash -> {
                     binding.dlMain.close()
                     val intent = Intent(this@MainActivity, TrashActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                     startActivity(intent)
-                }
-
-                R.id.itNote -> {
-                    binding.dlMain.close()
                 }
             }
             true

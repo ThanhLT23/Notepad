@@ -1,6 +1,9 @@
 package com.note.notepad.common.helpers
 
 import android.content.Context
+import android.text.InputFilter
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
 import com.note.notepad.common.enums.NoteAction
@@ -165,6 +168,45 @@ object DialogHelpers {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    fun showEditDialog(
+        context: Context,
+        currentName: String,
+        onSave: (String) -> Unit) {
+        val editText = EditText(context).apply {
+            setText(currentName)
+            setSelection(currentName.length)
+            filters = arrayOf(InputFilter.LengthFilter(25))
+        }
+        val dialog = AlertDialog.Builder(context)
+            .setTitle("Edit category name")
+            .setView(editText)
+            .setPositiveButton(context.getString(R.string.option_ok), null)
+            .setNegativeButton(context.getString(R.string.option_cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+
+        dialog.setOnShowListener {
+            val btnSave = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            btnSave.setOnClickListener {
+                val newName = editText.text.toString().trim()
+                when {
+                    newName.isEmpty() -> {
+                        editText.error = "no no"
+                    }
+                    newName == currentName -> {
+                        editText.error = "no no"
+                    }
+                    else -> {
+                        onSave(newName)
+                        dialog.dismiss()
+                    }
+                }
+            }
+        }
+        dialog.show()
     }
 
 }

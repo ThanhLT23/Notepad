@@ -11,10 +11,6 @@ import kotlinx.coroutines.launch
 class CreateNoteViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _currentNote = MutableStateFlow<NoteItems?>(null)
     val currentNote = _currentNote.asStateFlow()
-
-
-
-
     fun loadData(noteId: Int) {
         if (noteId == -1) return
 
