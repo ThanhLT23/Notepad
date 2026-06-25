@@ -25,6 +25,8 @@ class CategoryFragment : BaseFragment<FragmentCategoryBinding>(R.layout.fragment
     override fun initViews() {
         categoryAdapter = CategoryAdapter(
             onEditClick = { category ->
+                binding.edtAddCate.clearFocus()
+                binding.edtAddCate.hideKeyboard()
                 DialogHelpers.showEditDialog(requireContext(), category.name) { newName ->
                     viewModel.editCategory(category, newName)
                 }

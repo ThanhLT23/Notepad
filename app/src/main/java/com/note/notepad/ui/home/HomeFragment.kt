@@ -1,13 +1,9 @@
 package com.note.notepad.ui.home
 
 import android.content.Intent
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -61,8 +57,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val menu =
-                        (requireActivity() as AppCompatActivity).supportActionBar?.run { null }
                     if (viewModel.isSelectionMode.value) {
                         viewModel.exitSelectionMode()
                     } else {

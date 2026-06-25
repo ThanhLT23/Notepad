@@ -3,15 +3,12 @@ package com.note.notepad.ui.trash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.note.notepad.data.local.model.NoteItems
-import com.note.notepad.data.repository.CategoryRepository
 import com.note.notepad.data.repository.NoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class TrashViewModel(private val repository: NoteRepository, categoryRepository: CategoryRepository) : ViewModel() {
+class TrashViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _deletedList = MutableStateFlow<List<NoteItems>>(emptyList())
     val deleteList = _deletedList.asStateFlow()
     private val _selectedIds = MutableStateFlow<Set<Int>>(emptySet())
@@ -26,12 +23,6 @@ class TrashViewModel(private val repository: NoteRepository, categoryRepository:
             }
         }
     }
-
-    val categories = categoryRepository.getAllCategories().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = emptyList()
-    )
 
     fun onSelection(noteId: Int) {
         if (!_isSelectionMode.value) {

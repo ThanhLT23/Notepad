@@ -2,7 +2,6 @@ package com.note.notepad.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.note.notepad.data.local.model.NoteItems
 import com.note.notepad.data.repository.CategoryRepository
 import com.note.notepad.data.repository.NoteRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,7 +17,6 @@ import kotlin.collections.emptyList
 class MainViewModel(
     private val repository: NoteRepository,
     categoryRepository: CategoryRepository) : ViewModel() {
-    private val _noteList = MutableStateFlow<List<NoteItems>>(emptyList())
     private val _navigateToEdit = MutableSharedFlow<Int>()
     val navigateToEdit = _navigateToEdit.asSharedFlow()
     private val _selectedIds = MutableStateFlow<Set<Int>>(emptySet())
@@ -54,7 +52,7 @@ class MainViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = emptyList<NoteItems>()
+        initialValue = emptyList()
     )
 
     val categories = categoryRepository.getAllCategories().stateIn(

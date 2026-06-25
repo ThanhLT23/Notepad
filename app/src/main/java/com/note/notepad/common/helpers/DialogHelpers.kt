@@ -1,7 +1,6 @@
 package com.note.notepad.common.helpers
 
 import android.content.Context
-import android.graphics.Color
 import android.text.InputFilter
 import android.view.View
 import android.widget.EditText

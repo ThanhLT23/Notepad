@@ -4,21 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.note.notepad.data.local.model.CategoryItems
 import com.note.notepad.data.repository.CategoryRepository
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class CategoryEditorViewModel(private val repository: CategoryRepository): ViewModel() {
-    private val _currentCate = MutableStateFlow<CategoryItems?>(null)
-    val currentCate = _currentCate.asStateFlow()
-    private val _cateList = MutableStateFlow<List<CategoryItems>>(emptyList())
-
     val cateList = repository.getAllCategories().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = emptyList<CategoryItems>()
+        initialValue = emptyList()
     )
 
     fun addCategory(name: String) {
