@@ -8,7 +8,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_delete"
-        android:icon="@drawable/ic_delete"
+        android:icon="@drawable/ic_restore"
         android:title="@string/menu_delete"
         app:showAsAction="always" />
     <item

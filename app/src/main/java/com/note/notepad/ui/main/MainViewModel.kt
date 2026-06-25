@@ -87,7 +87,7 @@ class MainViewModel(
     }
 
     fun selectAll() {
-        val allIds = _noteList.value.map { it.id }.toSet()
+        val allIds = noteList.value.map { it.id }.toSet()
         if (selectedIds.value.size == allIds.size && allIds.isNotEmpty()) {
             clearSelection()
         } else {
@@ -96,9 +96,8 @@ class MainViewModel(
     }
 
     fun selectAllNotes() {
-        val ids = _noteList.value.map { it.id }.toSet()
+        val ids = noteList.value.map { it.id }.toSet()
         _isSelectionMode.value = true
-
         _selectedIds.value = ids
     }
 

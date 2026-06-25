@@ -1,0 +1,211 @@
+package com.note.notepad.ui.home
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.core.view.isGone
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.note.notepad.R
+import com.note.notepad.common.base.BaseFragment
+import com.note.notepad.common.delegate.viewBinding
+import com.note.notepad.common.helpers.DialogHelpers
+import com.note.notepad.databinding.FragmentHomeBinding
+import com.note.notepad.ui.editor.CreateNoteActivity
+import com.note.notepad.ui.main.MainViewModel
+import com.note.notepad.ui.main.adapter.MainAdapter
+import com.note.notepad.utils.AppConstant
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
+
+class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
+    override val binding by viewBinding(FragmentHomeBinding::bind)
+    private val viewModel: MainViewModel by viewModel()
+    private lateinit var noteAdapter: MainAdapter
+    private var currentSortOption = 0
+
+    override fun initViews() {
+        setupMenu()
+        noteAdapter = MainAdapter(
+            onItemClick = { noteId -> openEditorScreen(noteId) },
+            onItemLongClick = { noteId -> viewModel.onSelection(noteId) }
+        )
+        binding.rvHome.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = noteAdapter
+            itemAnimator = null
+        }
+    }
+
+    override fun initListener() {
+        binding.btnAddNote.setOnClickListener { viewModel.onFabClicked() }
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val menu =
+                        (requireActivity() as AppCompatActivity).supportActionBar?.run { null }
+                    if (viewModel.isSelectionMode.value) {
+                        viewModel.exitSelectionMode()
+                    } else {
+                        isEnabled = false
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    }
+                }
+            })
+    }
+
+    override fun observeData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.noteList.collect { list ->
+                noteAdapter.submitList(list) { binding.rvHome.scrollToPosition(0) }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.sortOption.collect { option ->
+                noteAdapter.updateSortOption(option)
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchQuery.collect { query ->
+                noteAdapter.updateSearchQuery(query)
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigateToEdit.collect { noteId -> openEditorScreen(noteId) }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isSelectionMode.collect { isMode ->
+                noteAdapter.isSelectionMode = isMode
+                binding.btnAddNote.isGone = isMode
+                updateToolbar(isMode)
+                requireActivity().invalidateOptionsMenu()
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.selectedIds.collect { ids ->
+                noteAdapter.updateSelection(ids)
+                if (viewModel.isSelectionMode.value) {
+                    updateTitle(ids.size.toString())
+                }
+            }
+        }
+    }
+
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_appbar, menu)
+                setupSearchView(menu)
+            }
+
+            override fun onPrepareMenu(menu: Menu) {
+                val isMode = viewModel.isSelectionMode.value
+                menu.findItem(R.id.menu_select_all)?.isVisible = isMode
+                menu.findItem(R.id.menu_delete)?.isVisible = isMode
+                menu.findItem(R.id.menu_sort)?.isVisible = !isMode
+                menu.findItem(R.id.menu_search)?.isVisible = !isMode
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_delete -> {
+                        DialogHelpers.showConfirmDeleteDialog(requireContext()) { viewModel.deleteSelectionNotes() }
+                        true
+                    }
+
+                    R.id.menu_select_all -> {
+                        viewModel.selectAll(); true
+                    }
+
+                    R.id.menu_select_all_notes -> {
+                        viewModel.selectAllNotes(); true
+                    }
+
+                    R.id.menu_sort -> {
+                        DialogHelpers.sortNotesDialog(
+                            requireContext(),
+                            currentSortOption
+                        ) { option ->
+                            currentSortOption = option
+                            viewModel.sortNotes(option)
+                        }
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun setupSearchView(menu: Menu) {
+        val searchItem = menu.findItem(R.id.menu_search)
+        val searchView = searchItem?.actionView as? SearchView
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.searchNotes(newText.orEmpty())
+                return true
+            }
+        })
+    }
+
+    private fun updateToolbar(isMode: Boolean) {
+        val activity = requireActivity() as? AppCompatActivity
+        val toolbar = activity?.findViewById<Toolbar>(R.id.tbMain)
+
+        if (isMode) {
+            toolbar?.setNavigationIcon(R.drawable.ic_back)
+            toolbar?.setNavigationOnClickListener {
+                viewModel.exitSelectionMode()
+            }
+        } else {
+            val navHostFragment =
+                activity?.supportFragmentManager?.findFragmentById(R.id.navHostFragment) as? NavHostFragment
+            val navController = navHostFragment?.navController
+            val dlMain = activity?.findViewById<DrawerLayout>(R.id.dlMain)
+
+            if (navController != null && dlMain != null) {
+                val appBarConfiguration = AppBarConfiguration(
+                    setOf(R.id.itNote, R.id.itTrash, R.id.itEditCategory),
+                    dlMain
+                )
+                toolbar?.setupWithNavController(navController, appBarConfiguration)
+            }
+        }
+        val title =
+            if (isMode) viewModel.selectedIds.value.size.toString() else getString(R.string.app_name)
+        updateTitle(title)
+    }
+
+    private fun updateTitle(title: String) {
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = title
+    }
+
+    private fun openEditorScreen(noteId: Int) {
+        val intent = Intent(requireContext(), CreateNoteActivity::class.java).apply {
+            putExtra(AppConstant.EXTRA_NOTE_ID, noteId)
+        }
+        startActivity(intent)
+    }
+}
