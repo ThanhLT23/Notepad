@@ -243,6 +243,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         val intent = Intent(requireContext(), CreateNoteActivity::class.java).apply {
             putExtra(AppConstant.EXTRA_NOTE_ID, noteId)
             putExtra("selected_category_id", categoryId)
+            putExtra(AppConstant.EXTRA_SEARCH_QUERY, viewModel.searchQuery.value)
         }
         startActivity(intent)
     }

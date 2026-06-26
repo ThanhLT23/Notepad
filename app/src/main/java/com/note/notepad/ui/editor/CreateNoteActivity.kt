@@ -55,7 +55,8 @@ class CreateNoteActivity : AppCompatActivity() {
 
         viewModel.loadData(noteId, categoryId)
         if (noteId == -1) {
-            lastSavedCategoryIds = if (categoryId != -1 && categoryId != -2) listOf(categoryId) else emptyList()
+            lastSavedCategoryIds =
+                if (categoryId != -1 && categoryId != -2) listOf(categoryId) else emptyList()
         }
         undoNotes = UndoRedoManager(binding.edtContent)
         searchManager = SearchManager(binding.edtContent)
@@ -68,7 +69,8 @@ class CreateNoteActivity : AppCompatActivity() {
             } else {
                 val isSaved = autoSave()
                 if (isSaved) {
-                    Toast.makeText(this, getString(R.string.note_saved_toast), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.note_saved_toast), Toast.LENGTH_SHORT)
+                        .show()
                 }
                 onBackPressedDispatcher.onBackPressed()
             }
@@ -80,16 +82,17 @@ class CreateNoteActivity : AppCompatActivity() {
             viewModel.currentNote.collect { note ->
                 note?.let {
                     if (binding.edtTitle.text.isEmpty() && binding.edtContent.text.isEmpty()) {
-                        val displayTitle = if (it.title == getString(R.string.title_untitled)) "" else it.title
+                        val displayTitle =
+                            if (it.title == getString(R.string.title_untitled)) "" else it.title
                         binding.edtTitle.setText(displayTitle)
                         binding.edtContent.setText(it.content)
                         lastSavedTitle = displayTitle
                         lastSavedContent = it.content
                         lastSavedCategoryIds = viewModel.selectedCategoryIds.value
                         undoNotes.saveCheckpoints()
-                        isNoteLoad = true
-                        checkAndTriggerSearch()
                     }
+                    isNoteLoad = true
+                    checkAndTriggerSearch()
                 }
             }
         }
@@ -105,7 +108,8 @@ class CreateNoteActivity : AppCompatActivity() {
 
         if (currentTitle == lastSavedTitle &&
             currentContent == lastSavedContent &&
-            currentCategories == lastSavedCategoryIds) return false
+            currentCategories == lastSavedCategoryIds
+        ) return false
 
         viewModel.saveNote(currentTitle, currentContent)
         lastSavedTitle = currentTitle
@@ -116,17 +120,20 @@ class CreateNoteActivity : AppCompatActivity() {
     }
 
     private fun checkAndTriggerSearch() {
-        if (isNoteLoad && pendingQuery.isNotEmpty() && toolBarMenu != null) {
-            val searchItem = toolBarMenu?.findItem(R.id.menu_search_editor)
-            val searchView = searchItem?.actionView as? SearchView
+        if (!isNoteLoad || pendingQuery.isEmpty() || toolBarMenu == null) return
+        val searchItem = toolBarMenu?.findItem(R.id.menu_search_editor)
+        val searchView = searchItem?.actionView as? SearchView
 
-            binding.tbEditor.post {
-                searchItem?.expandActionView()
-                searchView?.setQuery(pendingQuery, false)
-                searchView?.clearFocus()
-                pendingQuery = ""
-            }
+        searchItem?.isVisible = true
+        toolBarMenu?.findItem(R.id.menu_search_trigger)?.isVisible = false
+
+        binding.tbEditor.post {
+            searchItem?.expandActionView()
+            searchView?.setQuery(pendingQuery, false)
+            searchView?.clearFocus()
+            pendingQuery = ""
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -186,9 +193,9 @@ class CreateNoteActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.menu_search_down)?.isVisible = isSearchMode
         menu?.findItem(R.id.menu_search_editor)?.isVisible = isSearchMode
+        menu?.findItem(R.id.menu_search_count)?.isVisible = isSearchMode
         menu?.findItem(R.id.menu_search_trigger)?.isVisible = !isSearchMode
         menu?.findItem(R.id.menu_search_up)?.isVisible = isSearchMode
-        menu?.findItem(R.id.menu_search_count)?.isVisible = isSearchMode
 
         return super.onPrepareOptionsMenu(menu)
     }
@@ -198,7 +205,8 @@ class CreateNoteActivity : AppCompatActivity() {
             R.id.menu_save -> {
                 val isSaved = autoSave()
                 if (isSaved) {
-                    Toast.makeText(this, getString(R.string.note_saved_toast), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.note_saved_toast), Toast.LENGTH_SHORT)
+                        .show()
                 }
                 true
             }
@@ -214,10 +222,11 @@ class CreateNoteActivity : AppCompatActivity() {
             }
 
             R.id.menu_search_trigger -> {
-                isSearchMode = true
-                invalidateOptionsMenu()
+                val searchItem = toolBarMenu?.findItem(R.id.menu_search_editor)
+                searchItem?.isVisible = true
+                item.isVisible = false
                 binding.root.post {
-                    toolBarMenu?.findItem(R.id.menu_search_editor)?.expandActionView()
+                   searchItem?.expandActionView()
                 }
                 true
             }
@@ -251,6 +260,7 @@ class CreateNoteActivity : AppCompatActivity() {
                 }
                 true
             }
+
             R.id.menu_editor_categorize -> {
                 DialogHelpers.showCategorizeDialog(
                     this,
@@ -264,6 +274,7 @@ class CreateNoteActivity : AppCompatActivity() {
                 }
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
