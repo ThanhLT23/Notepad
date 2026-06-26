@@ -38,7 +38,7 @@ class TrashFragment : BaseFragment<FragmentTrashBinding>(R.layout.fragment_trash
                 if (viewModel.isSelectionMode.value) {
                     viewModel.onSelection(noteId)
                 } else {
-                    val note = viewModel.deleteList.value.find { it.id == noteId }
+                    val note = viewModel.deleteList.value.find { it.note.id == noteId }
                     note?.let {
                         DialogHelpers.showItemAction(requireContext()) { action ->
                             when (action) {
@@ -51,7 +51,8 @@ class TrashFragment : BaseFragment<FragmentTrashBinding>(R.layout.fragment_trash
             },
             onItemLongClick = { noteId ->
                 viewModel.onSelection(noteId)
-            }
+            },
+            showCategory = false
         )
         binding.rvTrash.apply {
             layoutManager = LinearLayoutManager(requireContext())

@@ -2,6 +2,7 @@ package com.note.notepad.data.repository
 
 import com.note.notepad.data.local.dao.CategoryDao
 import com.note.notepad.data.local.model.CategoryItems
+import com.note.notepad.data.local.model.CategoryNoteRef
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -32,4 +33,5 @@ class CategoryRepository(private val dao: CategoryDao) {
     suspend fun deleteCategory(category: CategoryItems) = withContext(Dispatchers.IO) {
         dao.deleteCategory(category)
     }
+
 }

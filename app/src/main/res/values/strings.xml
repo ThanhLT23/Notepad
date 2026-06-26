@@ -55,4 +55,6 @@
     <string name="categories_title">Categories</string>
     <string name="edtCate_hint">New category name</string>
     <string name="add_cate_btn">ADD</string>
+    <string name="menu_categorize">Categorize</string>
+    <string name="category_updated_toast">Updated categories</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.note.notepad.data.repository
 
 import com.note.notepad.data.local.dao.NoteDao
+import com.note.notepad.data.local.model.CategoryNoteRef
 import com.note.notepad.data.local.model.NoteItems
+import com.note.notepad.data.local.model.relation.NoteWithCategories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -39,4 +41,16 @@ class NoteRepository(private val noteDao: NoteDao) {
         noteDao.restoreAllTrash()
     }
 
+    suspend fun insertCategoryNoteRef(ref: CategoryNoteRef) = withContext(Dispatchers.IO) {
+        noteDao.insertCategoryNoteRef(ref)
+    }
+
+    fun getDeletedNotesWithCategories(): Flow<List<NoteWithCategories>> = noteDao.getDeletedNotesWithCategories()
+
+    suspend fun updateNoteCategories(noteId: Int, categoryIds: List<Int>) = withContext(Dispatchers.IO) {
+        noteDao.updateNoteCategories(noteId, categoryIds)
+    }
+
+    fun getNoteWithCategoriesById(id: Int): Flow<NoteWithCategories?> = noteDao.getNoteWithCategoriesById(id)
+    fun getAllNotesWithCategories(): Flow<List<NoteWithCategories>> = noteDao.getNotesWithCategories()
 }

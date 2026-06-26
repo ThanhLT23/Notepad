@@ -10,6 +10,8 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
 import com.note.notepad.common.enums.NoteAction
+import com.note.notepad.data.local.model.CategoryItems
+import com.note.notepad.data.local.model.relation.NoteWithCategories
 
 object DialogHelpers {
     fun undoAllDialog(
@@ -176,7 +178,8 @@ object DialogHelpers {
     fun showEditDialog(
         context: Context,
         currentName: String,
-        onSave: (String) -> Unit) {
+        onSave: (String) -> Unit
+    ) {
         val density = context.resources.displayMetrics.density
 
         val layout = LinearLayout(context).apply {
@@ -233,10 +236,12 @@ object DialogHelpers {
                         tvError.text = "Category name cannot be empty"
                         tvError.visibility = View.VISIBLE
                     }
+
                     newName == currentName -> {
                         tvError.text = "Category with that name already exists."
                         tvError.visibility = View.VISIBLE
                     }
+
                     else -> {
                         onSave(newName)
                         dialog.dismiss()
@@ -261,6 +266,31 @@ object DialogHelpers {
             .setNegativeButton(context.getString(R.string.option_cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
+            .show()
+    }
+
+    fun showCategorizeDialog(
+        context: Context,
+        allCategories: List<CategoryItems>,
+        recentSelectedIds: List<Int> = emptyList(),
+        onConfirm: (List<Int>) -> Unit
+    ) {
+        val name = allCategories.map { it.name }.toTypedArray()
+        val checkedItems = BooleanArray(allCategories.size) { index ->
+            allCategories[index].id in recentSelectedIds
+        }
+        val selectedIds = recentSelectedIds.toMutableList()
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Select category")
+            .setMultiChoiceItems(name, checkedItems) { _, which, isChecked ->
+                val catId = allCategories[which].id
+                if (isChecked) selectedIds.add(catId) else selectedIds.remove(catId)
+            }
+            .setPositiveButton(context.getString(R.string.option_ok)) { _, _ ->
+                onConfirm(selectedIds)
+            }
+            .setNegativeButton(context.getString(R.string.option_cancel), null)
             .show()
     }
 

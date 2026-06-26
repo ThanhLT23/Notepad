@@ -1,13 +1,14 @@
 package com.note.notepad.ui.main
 
+import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.note.notepad.R
 import com.note.notepad.common.base.BaseActivity
 import com.note.notepad.common.delegate.viewBinding
@@ -33,40 +34,71 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             binding.dlMain
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        binding.navMain.setupWithNavController(navController)
-    }
-
-    override fun observeData() {
-        lifecycleScope.launch {
-            viewModel.categories.collect { category ->
-                updateDrawerCategory(category)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id != R.id.itNote) {
+                supportActionBar?.subtitle = null
             }
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-
-    private fun updateDrawerCategory(categories: List<CategoryItems>) {
-        val menu = binding.navMain.menu
-        val categoriesParent = menu.findItem(R.id.itCategoriesParent)
-        val menuSub = categoriesParent.subMenu ?: return
-
-        menuSub.removeGroup(R.id.grItemCategory)
-        menuSub.findItem(R.id.itUncategorized)?.isVisible = categories.isNotEmpty()
-
-        categories.forEachIndexed { index, category ->
-            menuSub.add(R.id.grItemCategory, category.id, index, category.name).apply {
-                icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_category)
-
-                setOnMenuItemClickListener {
+        binding.navMain.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.itNote -> {
+                    viewModel.setCategory(-1)
+                    if (navController.currentDestination?.id != R.id.itNote) {
+                        navController.navigate((R.id.itNote))
+                    }
                     binding.dlMain.close()
                     true
+                }
+                R.id.itUncategorized -> {
+                    viewModel.setCategory(-2)
+                    if (navController.currentDestination?.id != R.id.itNote) {
+                        navController.navigate((R.id.itNote))
+                    }
+                    binding.dlMain.close()
+                    true
+                }
+                else -> {
+                    val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
+                    if (handled) binding.dlMain.close()
+                    handled
                 }
             }
         }
     }
+
+    override fun observeData() {
+        lifecycleScope.launch {
+        viewModel.categories.collect { category ->
+            updateDrawerCategory(category)
+        }
+    }
+}
+
+override fun onSupportNavigateUp(): Boolean {
+    return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+}
+
+
+private fun updateDrawerCategory(categories: List<CategoryItems>) {
+    val menu = binding.navMain.menu
+    val categoriesParent = menu.findItem(R.id.itCategoriesParent)
+    val menuSub = categoriesParent.subMenu ?: return
+
+    menuSub.removeGroup(R.id.grItemCategory)
+    menuSub.findItem(R.id.itUncategorized)?.isVisible = categories.isNotEmpty()
+
+    categories.forEachIndexed { index, category ->
+        menuSub.add(R.id.grItemCategory, category.id, index, category.name).apply {
+            icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_category)
+
+            setOnMenuItemClickListener {
+                viewModel.setCategory(category.id)
+                navController.navigate(R.id.itNote)
+                binding.dlMain.close()
+                true
+            }
+        }
+    }
+}
 }
 

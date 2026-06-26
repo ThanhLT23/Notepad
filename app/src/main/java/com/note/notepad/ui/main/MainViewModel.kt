@@ -28,26 +28,40 @@ class MainViewModel(
     private val _searchOption = MutableStateFlow("")
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
+    private val _categoryId = MutableStateFlow(-1)
+    val categoryId = _categoryId.asStateFlow()
+
+    fun setCategory(id: Int) {
+        _categoryId.value = id
+    }
 
     val noteList = combine(
-        repository.getAllNote(), _sortOption, _searchOption
-    ) { note, option, query ->
-        val filteredNotes = if (query.isBlank()) {
-            note
+        repository.getAllNotesWithCategories(), _sortOption, _searchOption, _categoryId
+    ) { noteWithCat, option, query, catId ->
+        val categoryFiltered = when (catId) {
+            -1 -> noteWithCat
+            -2 -> noteWithCat.filter { it.category.isEmpty()}
+            else -> noteWithCat.filter { noteObj ->
+                noteObj.category.any { it.id == catId } }
+        }
+
+        val searchFiltered = if (query.isBlank()) {
+            categoryFiltered
         } else {
-            note.filter {
-                it.title.contains(query, ignoreCase = true) ||
-                        it.content.contains(query, ignoreCase = true)
+            categoryFiltered.filter {
+                it.note.title.contains(query, ignoreCase = true) ||
+                        it.note.content.contains(query, ignoreCase = true)
             }
         }
+
         when (option) {
-            0 -> filteredNotes.sortedByDescending { it.lastTime }
-            1 -> filteredNotes.sortedBy { it.lastTime }
-            2 -> filteredNotes.sortedByDescending { it.title }
-            3 -> filteredNotes.sortedBy { it.title }
-            4 -> filteredNotes.sortedByDescending { it.creationTime }
-            5 -> filteredNotes.sortedBy { it.creationTime }
-            else -> filteredNotes
+            0 -> searchFiltered.sortedByDescending { it.note.lastTime }
+            1 -> searchFiltered.sortedBy { it.note.lastTime }
+            2 -> searchFiltered.sortedByDescending { it.note.title }
+            3 -> searchFiltered.sortedBy { it.note.title }
+            4 -> searchFiltered.sortedByDescending { it.note.creationTime }
+            5 -> searchFiltered.sortedBy { it.note.creationTime }
+            else -> searchFiltered
         }
     }.stateIn(
         scope = viewModelScope,
@@ -62,7 +76,7 @@ class MainViewModel(
     )
     fun onFabClicked() {
         viewModelScope.launch {
-            _navigateToEdit.emit(-1)
+            _navigateToEdit.emit(_categoryId.value)
         }
     }
 
@@ -85,7 +99,7 @@ class MainViewModel(
     }
 
     fun selectAll() {
-        val allIds = noteList.value.map { it.id }.toSet()
+        val allIds = noteList.value.map { it.note.id }.toSet()
         if (selectedIds.value.size == allIds.size && allIds.isNotEmpty()) {
             clearSelection()
         } else {
@@ -94,7 +108,7 @@ class MainViewModel(
     }
 
     fun selectAllNotes() {
-        val ids = noteList.value.map { it.id }.toSet()
+        val ids = noteList.value.map { it.note.id }.toSet()
         _isSelectionMode.value = true
         _selectedIds.value = ids
     }
@@ -121,6 +135,15 @@ class MainViewModel(
     fun searchNotes(query: String) {
         _searchOption.value = query
         _searchQuery.value = query
+    }
+
+    fun categorizeSelectedNotes(categoryIds: List<Int>) {
+        viewModelScope.launch {
+            _selectedIds.value.forEach { noteId ->
+                repository.updateNoteCategories(noteId, categoryIds)
+            }
+            exitSelectionMode()
+        }
     }
 
 }

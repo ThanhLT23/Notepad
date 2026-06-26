@@ -3,13 +3,14 @@ package com.note.notepad.ui.trash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.note.notepad.data.local.model.NoteItems
+import com.note.notepad.data.local.model.relation.NoteWithCategories
 import com.note.notepad.data.repository.NoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class TrashViewModel(private val repository: NoteRepository) : ViewModel() {
-    private val _deletedList = MutableStateFlow<List<NoteItems>>(emptyList())
+    private val _deletedList = MutableStateFlow<List<NoteWithCategories>>(emptyList())
     val deleteList = _deletedList.asStateFlow()
     private val _selectedIds = MutableStateFlow<Set<Int>>(emptySet())
     val selectedIds = _selectedIds.asStateFlow()
@@ -18,7 +19,7 @@ class TrashViewModel(private val repository: NoteRepository) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            repository.getDeletedNote().collect { list ->
+            repository.getDeletedNotesWithCategories().collect { list ->
                 _deletedList.value = list
             }
         }
@@ -43,7 +44,7 @@ class TrashViewModel(private val repository: NoteRepository) : ViewModel() {
     }
 
     fun selectAll() {
-        val allIds = _deletedList.value.map { it.id }.toSet()
+        val allIds = _deletedList.value.map { it.note.id }.toSet()
         if (selectedIds.value.size == allIds.size && allIds.isNotEmpty()) {
             clearSelection()
         } else {

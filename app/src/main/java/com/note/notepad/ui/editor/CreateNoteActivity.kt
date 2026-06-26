@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
+import com.note.notepad.common.extension.showToast
 import com.note.notepad.common.helpers.DialogHelpers
 import com.note.notepad.databinding.ActivityCreateNoteBinding
 import com.note.notepad.utils.AppConstant
@@ -29,6 +30,8 @@ class CreateNoteActivity : AppCompatActivity() {
     private var isNoteLoad = false
     private var lastSavedTitle = ""
     private var lastSavedContent = ""
+    private var categoryId = -1
+    private var lastSavedCategoryIds: List<Int> = emptyList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,16 +45,18 @@ class CreateNoteActivity : AppCompatActivity() {
         initView()
         initListener()
         observeData()
-
-
     }
 
     private fun initView() {
         setSupportActionBar(binding.tbEditor)
         val noteId = intent.getIntExtra(AppConstant.EXTRA_NOTE_ID, -1)
         pendingQuery = intent.getStringExtra(AppConstant.EXTRA_SEARCH_QUERY) ?: ""
+        categoryId = intent.getIntExtra("selected_category_id", -1)
 
-        viewModel.loadData(noteId)
+        viewModel.loadData(noteId, categoryId)
+        if (noteId == -1) {
+            lastSavedCategoryIds = if (categoryId != -1 && categoryId != -2) listOf(categoryId) else emptyList()
+        }
         undoNotes = UndoRedoManager(binding.edtContent)
         searchManager = SearchManager(binding.edtContent)
     }
@@ -80,6 +85,7 @@ class CreateNoteActivity : AppCompatActivity() {
                         binding.edtContent.setText(it.content)
                         lastSavedTitle = displayTitle
                         lastSavedContent = it.content
+                        lastSavedCategoryIds = viewModel.selectedCategoryIds.value
                         undoNotes.saveCheckpoints()
                         isNoteLoad = true
                         checkAndTriggerSearch()
@@ -87,17 +93,24 @@ class CreateNoteActivity : AppCompatActivity() {
                 }
             }
         }
+        lifecycleScope.launch {
+            viewModel.allCategories.collect {}
+        }
     }
 
     private fun autoSave(): Boolean {
         val currentTitle = binding.edtTitle.text.toString()
         val currentContent = binding.edtContent.text.toString()
+        val currentCategories = viewModel.selectedCategoryIds.value
 
-        if (currentTitle == lastSavedTitle && currentContent == lastSavedContent) return false
+        if (currentTitle == lastSavedTitle &&
+            currentContent == lastSavedContent &&
+            currentCategories == lastSavedCategoryIds) return false
 
         viewModel.saveNote(currentTitle, currentContent)
         lastSavedTitle = currentTitle
         lastSavedContent = currentContent
+        lastSavedCategoryIds = currentCategories
 
         return true
     }
@@ -238,7 +251,19 @@ class CreateNoteActivity : AppCompatActivity() {
                 }
                 true
             }
-
+            R.id.menu_editor_categorize -> {
+                DialogHelpers.showCategorizeDialog(
+                    this,
+                    viewModel.allCategories.value,
+                    viewModel.selectedCategoryIds.value
+                ) { selectedIds ->
+                    viewModel.updateSelectedCategories(selectedIds)
+                    if (autoSave()) {
+                        showToast(R.string.category_updated_toast)
+                    }
+                }
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -2,9 +2,13 @@ package com.note.notepad.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
+import com.note.notepad.data.local.model.CategoryNoteRef
 import com.note.notepad.data.local.model.NoteItems
+import com.note.notepad.data.local.model.relation.NoteWithCategories
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -38,4 +42,30 @@ interface NoteDao {
 
     @Query("UPDATE notes SET isDeleted = 0 WHERE isDeleted = 1")
     suspend fun restoreAllTrash()
+
+    @Transaction
+    @Query("SELECT * FROM notes WHERE isDeleted = 0")
+    fun getNotesWithCategories(): Flow<List<NoteWithCategories>>
+
+    @Transaction
+    @Query("SELECT * FROM notes WHERE isDeleted = 1")
+    fun getDeletedNotesWithCategories(): Flow<List<NoteWithCategories>>
+
+    @Query("DELETE FROM category_note_ref WHERE noteId = :noteId")
+    suspend fun deleteCategoriesForNote(noteId: Int)
+
+    @Transaction
+    suspend fun updateNoteCategories(noteId: Int, categoryIds: List<Int>) {
+        deleteCategoriesForNote(noteId)
+        categoryIds.forEach { catId ->
+            insertCategoryNoteRef(CategoryNoteRef(noteId, catId))
+        }
+    }
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategoryNoteRef(ref: CategoryNoteRef)
+
+    @Transaction
+    @Query("SELECT * FROM notes WHERE id = :noteId")
+    fun getNoteWithCategoriesById(noteId: Int): Flow<NoteWithCategories?>
+
 }

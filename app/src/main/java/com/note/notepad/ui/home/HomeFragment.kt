@@ -27,20 +27,22 @@ import com.note.notepad.ui.editor.CreateNoteActivity
 import com.note.notepad.ui.main.MainViewModel
 import com.note.notepad.ui.main.adapter.MainAdapter
 import com.note.notepad.utils.AppConstant
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     override val binding by viewBinding(FragmentHomeBinding::bind)
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: MainViewModel by activityViewModel()
     private lateinit var noteAdapter: MainAdapter
     private var currentSortOption = 0
 
     override fun initViews() {
         setupMenu()
+
         noteAdapter = MainAdapter(
-            onItemClick = { noteId -> openEditorScreen(noteId) },
+            onItemClick = { noteId -> openEditorScreen(noteId = noteId, categoryId = -1) },
             onItemLongClick = { noteId -> viewModel.onSelection(noteId) }
         )
         binding.rvHome.apply {
@@ -84,7 +86,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.navigateToEdit.collect { noteId -> openEditorScreen(noteId) }
+            viewModel.navigateToEdit.collect { targetCategoryId ->
+                openEditorScreen(
+                    noteId = -1,
+                    categoryId = targetCategoryId
+                )
+            }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isSelectionMode.collect { isMode ->
@@ -102,6 +109,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            combine(viewModel.categoryId, viewModel.categories) { id, list ->
+                Pair(id, list)
+            }.collect { (currentId, categoryList) ->
+                val activity = (requireActivity() as? AppCompatActivity)
+                activity?.supportActionBar?.title = getString(R.string.app_name)
+
+                when (currentId) {
+                    -1 -> {
+                        activity?.supportActionBar?.subtitle = null
+                    }
+
+                    -2 -> {
+                        activity?.supportActionBar?.subtitle = "Uncategorized"
+                    }
+
+                    else -> {
+                        if (categoryList.isNotEmpty()) {
+                            val categoryName = categoryList.find { it.id == currentId }?.name
+                            activity?.supportActionBar?.subtitle = categoryName
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun setupMenu() {
@@ -116,6 +148,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 val isMode = viewModel.isSelectionMode.value
                 menu.findItem(R.id.menu_select_all)?.isVisible = isMode
                 menu.findItem(R.id.menu_delete)?.isVisible = isMode
+                menu.findItem(R.id.menu_categorize)?.isVisible = isMode
                 menu.findItem(R.id.menu_sort)?.isVisible = !isMode
                 menu.findItem(R.id.menu_search)?.isVisible = !isMode
             }
@@ -133,6 +166,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
                     R.id.menu_select_all_notes -> {
                         viewModel.selectAllNotes(); true
+                    }
+
+                    R.id.menu_categorize -> {
+                        DialogHelpers.showCategorizeDialog(
+                            requireContext(),
+                            viewModel.categories.value
+                        ) { selectedIds ->
+                            viewModel.categorizeSelectedNotes(selectedIds)
+                        }
+                        true
                     }
 
                     R.id.menu_sort -> {
@@ -196,10 +239,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = title
     }
 
-    private fun openEditorScreen(noteId: Int) {
+    private fun openEditorScreen(noteId: Int, categoryId: Int) {
         val intent = Intent(requireContext(), CreateNoteActivity::class.java).apply {
             putExtra(AppConstant.EXTRA_NOTE_ID, noteId)
+            putExtra("selected_category_id", categoryId)
         }
         startActivity(intent)
     }
+
 }

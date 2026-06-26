@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.note.notepad.data.local.model.CategoryItems
+import com.note.notepad.data.local.model.CategoryNoteRef
 import kotlinx.coroutines.flow.Flow
 
 @Dao
