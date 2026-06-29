@@ -38,4 +38,9 @@
         android:id="@+id/menu_categorize"
         android:title="@string/menu_categorize"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_colorize"
+        android:title="@string/colorize_title"
+        app:showAsAction="never"/>
 </menu>

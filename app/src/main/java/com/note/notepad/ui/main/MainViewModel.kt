@@ -146,4 +146,13 @@ class MainViewModel(
         }
     }
 
+    fun colorizeSelectedNotes(color: Int) {
+        val ids = _selectedIds.value.toList()
+        if (ids.isEmpty()) return
+        viewModelScope.launch {
+            repository.updateNotesColor(ids, color)
+            exitSelectionMode()
+        }
+    }
+
 }

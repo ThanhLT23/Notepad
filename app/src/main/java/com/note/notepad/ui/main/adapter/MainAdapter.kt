@@ -1,5 +1,6 @@
 package com.note.notepad.ui.main.adapter
 
+import android.graphics.drawable.GradientDrawable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.note.notepad.R
+import com.note.notepad.common.extension.dp
+import com.note.notepad.common.helpers.ColorHelpers
 import com.note.notepad.data.local.model.relation.NoteWithCategories
 import com.note.notepad.databinding.ItemNoteBinding
 import com.note.notepad.utils.AppConstant
@@ -34,6 +37,9 @@ class MainAdapter(
             val categories = item.category
             val total = categories.size
             val LIMIT = 24
+            val context = binding.root.context
+            val isSelected = selectedIds.contains(note.id)
+            val colorSet = ColorHelpers.getNoteColorSet(context, note.color)
             var result = ""
             var addedCount = 0
 
@@ -62,11 +68,26 @@ class MainAdapter(
                     binding.root.context.getString(R.string.format_last_edit, dateString)
             }
 
-            val isSelected = selectedIds.contains(note.id)
-            if (isSelected) {
-                binding.root.setBackgroundResource(R.drawable.bg_note_selected)
-            } else {
-                binding.root.setBackgroundResource(R.drawable.bg_note_item)
+            val resId = if (isSelected) R.drawable.bg_note_selected else R.drawable.bg_note_item
+            val drawable = ContextCompat.getDrawable(context, resId)?.mutate() as? GradientDrawable
+
+            drawable?.let {
+                if (isSelected) {
+                    it.colors = intArrayOf(colorSet.startSelected, colorSet.selected)
+                    it.setStroke(
+                        context.dp(2),
+                        colorSet.border,
+                        context.dp(8f),
+                        context.dp(4f)
+                    )
+                } else {
+                    it.colors = intArrayOf(colorSet.start, colorSet.end)
+                    it.setStroke(
+                        context.dp(1),
+                        ContextCompat.getColor(context, R.color.note_border)
+                    )
+                }
+                binding.root.background = it
             }
 
             binding.root.setOnClickListener {
@@ -96,7 +117,7 @@ class MainAdapter(
                 val potentialName = result + separator + name
 
                 val remaining = total - (i + 1)
-                val suffix = if (remaining > 0) " (+ $remaining" else ""
+                val suffix = if (remaining > 0) " (+ $remaining)" else ""
 
                 if ((potentialName + suffix).length <= LIMIT) {
                     result = potentialName

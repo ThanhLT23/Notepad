@@ -122,7 +122,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     }
 
                     -2 -> {
-                        activity?.supportActionBar?.subtitle = "Uncategorized"
+                        activity?.supportActionBar?.subtitle =
+                            getString(R.string.subtitle_uncategorized)
                     }
 
                     else -> {
@@ -189,6 +190,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                         true
                     }
 
+                    R.id.menu_colorize -> {
+                        DialogHelpers.showColorDialog(
+                            requireContext(), 0) { color ->
+                            viewModel.colorizeSelectedNotes(color)
+                        }
+                        true
+                    }
+
                     else -> false
                 }
             }
@@ -242,7 +251,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun openEditorScreen(noteId: Int, categoryId: Int) {
         val intent = Intent(requireContext(), CreateNoteActivity::class.java).apply {
             putExtra(AppConstant.EXTRA_NOTE_ID, noteId)
-            putExtra("selected_category_id", categoryId)
+            putExtra(AppConstant.SELECTED_CATEGORY_ID, categoryId)
             putExtra(AppConstant.EXTRA_SEARCH_QUERY, viewModel.searchQuery.value)
         }
         startActivity(intent)

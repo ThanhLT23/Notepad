@@ -53,4 +53,7 @@ class NoteRepository(private val noteDao: NoteDao) {
 
     fun getNoteWithCategoriesById(id: Int): Flow<NoteWithCategories?> = noteDao.getNoteWithCategoriesById(id)
     fun getAllNotesWithCategories(): Flow<List<NoteWithCategories>> = noteDao.getNotesWithCategories()
+    suspend fun updateNotesColor(ids: List<Int>, color: Int) = withContext(Dispatchers.IO) {
+        noteDao.updateNotesColor(ids, color)
+    }
 }

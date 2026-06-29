@@ -1,17 +1,25 @@
 package com.note.notepad.common.helpers
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.text.InputFilter
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.note.notepad.R
 import com.note.notepad.common.enums.NoteAction
 import com.note.notepad.data.local.model.CategoryItems
-import com.note.notepad.data.local.model.relation.NoteWithCategories
 
 object DialogHelpers {
     fun undoAllDialog(
@@ -292,6 +300,95 @@ object DialogHelpers {
             }
             .setNegativeButton(context.getString(R.string.option_cancel), null)
             .show()
+    }
+
+    @SuppressLint("InflateParams")
+    fun showColorDialog(
+        context: Context,
+        currentColor: Int,
+        onSave: (Int) -> Unit
+    ) {
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_color_picker, null)
+        val rvColor = view.findViewById<RecyclerView>(R.id.rvColors)
+        val btnRemoveColor = view.findViewById<Button>(R.id.btnRemoveColor)
+        val btnCancel = view.findViewById<Button>(R.id.btnCancel)
+        val btnOk = view.findViewById<Button>(R.id.btnOk)
+
+        val colorList = listOf(
+            ContextCompat.getColor(context, R.color.color_light_peach_pink),
+            ContextCompat.getColor(context, R.color.color_peach_orange),
+            ContextCompat.getColor(context, R.color.color_pastel_yellow),
+            ContextCompat.getColor(context, R.color.color_pastel_green),
+            ContextCompat.getColor(context, R.color.color_pastel_aqua),
+            ContextCompat.getColor(context, R.color.color_soft_blue)
+        )
+        var tempSelectedColor = currentColor
+        rvColor.layoutManager = GridLayoutManager(context, 6)
+        val adapter = ColorGridAdapter(colorList, tempSelectedColor) { color ->
+            tempSelectedColor = color
+        }
+        rvColor.adapter = adapter
+
+        val dialog = AlertDialog.Builder(context)
+            .setView(view)
+            .create()
+        btnRemoveColor.setOnClickListener {
+            onSave(0)
+            dialog.dismiss()
+        }
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        btnOk.setOnClickListener {
+            onSave(tempSelectedColor)
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private class ColorGridAdapter(
+        private val colors: List<Int>,
+        private var selectedColor: Int,
+        private val onColorClicked: (Int) -> Unit
+    ) : RecyclerView.Adapter<ColorGridAdapter.ColorViewHolder>() {
+        inner class ColorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            private val viewColor: View = view.findViewById(R.id.viewColor)
+            private val imgView: ImageView = view.findViewById(R.id.imgView)
+            fun bind(color: Int) {
+                if (color == 0) {
+                    viewColor.setBackgroundColor(Color.TRANSPARENT)
+                } else {
+                    viewColor.setBackgroundColor(color)
+                }
+
+                if (color == selectedColor) {
+                    imgView.visibility = View.VISIBLE
+                } else {
+                    imgView.visibility = View.GONE
+                }
+
+                itemView.setOnClickListener {
+                    val oldSelected = selectedColor
+                    selectedColor = color
+
+                    notifyItemChanged(colors.indexOf(oldSelected))
+                    notifyItemChanged(adapterPosition)
+
+                    onColorClicked(color)
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ColorViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_color, parent, false)
+            return ColorViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: ColorViewHolder, position: Int) {
+            holder.bind(colors[position])
+        }
+
+        override fun getItemCount() = colors.size
     }
 
 }

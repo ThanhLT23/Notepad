@@ -19,6 +19,8 @@ class CreateNoteViewModel(
     val currentNote = _currentNote.asStateFlow()
     private val _selectedCategoryIds = MutableStateFlow<List<Int>>(emptyList())
     val selectedCategoryIds = _selectedCategoryIds.asStateFlow()
+    private val _noteColor = MutableStateFlow<Int>(0)
+    val noteColor = _noteColor.asStateFlow()
 
     val allCategories = categoryRepository.getAllCategories()
         .stateIn(
@@ -39,6 +41,7 @@ class CreateNoteViewModel(
             repository.getNoteWithCategoriesById(noteId).collect { noteWithCats ->
                 _selectedCategoryIds.value = noteWithCats?.category?.map { it.id } ?: emptyList()
                 _currentNote.value = noteWithCats?.note
+                _noteColor.value = noteWithCats?.note?.color ?: 0
             }
         }
     }
@@ -55,7 +58,8 @@ class CreateNoteViewModel(
                     title = newTitle,
                     content = content,
                     lastTime = now,
-                    creationTime = now
+                    creationTime = now,
+                    color = _noteColor.value
                 )
                 val noteId = repository.insertNote(newNote).toInt()
                 repository.updateNoteCategories(noteId, categoryIds)
@@ -63,7 +67,8 @@ class CreateNoteViewModel(
                 val updateNote = current.copy(
                     title = newTitle,
                     content = content,
-                    lastTime = now
+                    lastTime = now,
+                    color = _noteColor.value
                 )
                 repository.updateNote(updateNote)
                 repository.updateNoteCategories(updateNote.id, categoryIds)
@@ -85,5 +90,8 @@ class CreateNoteViewModel(
         _selectedCategoryIds.value = ids
     }
 
+    fun updateNoteColor(color: Int) {
+        _noteColor.value = color
+    }
 
 }

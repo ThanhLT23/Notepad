@@ -11,6 +11,7 @@ data class NoteItems(
     val content: String,
     val lastTime: Long,
     val creationTime: Long,
+    val color: Int = 0,
     val isSelected: Boolean = false,
     val isDeleted: Boolean = false
 )

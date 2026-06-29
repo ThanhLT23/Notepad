@@ -57,4 +57,7 @@
     <string name="add_cate_btn">ADD</string>
     <string name="menu_categorize">Categorize</string>
     <string name="category_updated_toast">Updated categories</string>
+    <string name="subtitle_uncategorized">Uncategorized</string>
+    <string name="remove_color">REMOVE THE COLOR</string>
+    <string name="colorize_title">Colorize</string>
 </resources>

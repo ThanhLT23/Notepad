@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Common Colors -->
     <color name="black">#FF000000</color>
     <color name="red">#D32F2F</color>
+    <color name="white">#FFFFFF</color>
     <!-- Brand Colors -->
     <color name="primaryColor">#917754</color>
-    <color name="secondColor">#74664F</color>
+
 
     <!-- System & Background Colors -->
-    <color name="statusBarColor">#332921</color>
     <color name="backgroundColor">#ffffdd</color>
 
     <!-- Component Colors -->
@@ -19,12 +20,61 @@
     <color name="noteBackgroundGradientEnd">#F3A2A6</color>
     <color name="note_border">#9f8964</color>
     <color name="bg_note_selected">#bd9f82</color>
+    <color name="bg_remove_btn">#d6d8d7</color>
 
-    <!-- Text & Icon Colors -->
+    <!-- Text Colors -->
     <color name="textColorPrimary">#111111</color>
     <color name="textColorSecondary">#4A4A4A</color>
     <color name="textHint">#796a43</color>
-    <color name="white">#FFFFFF</color>
     <color name="highlightColor">#aafe8e</color>
     <color name="highlightSelect">#d4d329</color>
+
+    <!-- Light peach pink -->
+    <color name="color_light_peach_pink">#ffaead</color>
+    <color name="bg_color_light_peach_pink">#560000</color>
+    <color name="note_pink_start">#feeae9</color>
+    <color name="note_pink_start_selected">#faa890</color>
+    <color name="note_pink_selected">#c3705e</color>
+    <color name="note_pink_border">#a05940</color>
+
+    <!-- Peach orange -->
+    <color name="color_peach_orange">#ffd7a6</color>
+    <color name="bg_color_peach_orange">#550702</color>
+    <color name="note_orange_start">#fff0dd</color>
+    <color name="note_orange_start_selected">#f8cd88</color>
+    <color name="note_orange_selected">#c28a59</color>
+    <color name="note_orange_border">#a4723f</color>
+
+    <!-- Pastel yellow -->
+    <color name="color_pastel_yellow">#fdffb6</color>
+    <color name="bg_color_pastel_yellow">#545700</color>
+    <color name="note_yellow_start">#fefef2</color>
+    <color name="note_yellow_start_selected">#f9f999</color>
+    <color name="note_yellow_selected">#bfa461</color>
+    <color name="note_yellow_border">#a48946</color>
+
+    <!-- Pastel Green -->
+    <color name="color_pastel_green">#cbffbf</color>
+    <color name="bg_color_pastel_green">#0f5900</color>
+    <color name="note_green_start">#fdfffc</color>
+    <color name="note_green_start_selected">#c6f89f</color>
+    <color name="note_green_selected">#9dac6c</color>
+    <color name="note_green_border">#82884a</color>
+
+    <!-- Pastel Aqua -->
+    <color name="color_pastel_aqua">#9cf6ff</color>
+    <color name="bg_color_pastel_aqua">#004b51</color>
+    <color name="note_aqua_start">#d5fbfe</color>
+    <color name="note_aqua_start_selected">#99efd6</color>
+    <color name="note_aqua_selected">#76a08c</color>
+    <color name="note_aqua_border">#638363</color>
+
+    <!-- Soft Blue -->
+    <color name="color_soft_blue">#A8BFFD</color>
+    <color name="bg_color_soft_blue">#074A51</color>
+    <color name="note_blue_start">#DCE7FD</color>
+    <color name="note_blue_start_selected">#9FBDD4</color>
+    <color name="note_blue_selected">#7C808C</color>
+    <color name="note_blue_border">#686963</color>
+
 </resources>
