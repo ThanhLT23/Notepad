@@ -37,7 +37,7 @@ class MainAdapter(
             val note = item.note
             val categories = item.category
             val total = categories.size
-            val LIMIT = 24
+            val limit = 24
             val context = binding.root.context
             val isSelected = selectedIds.contains(note.id)
             val colorSet = ColorHelpers.getNoteColorSet(context, note.color)
@@ -108,7 +108,7 @@ class MainAdapter(
                 true
             }
 
-            if (total == 0) {
+            if (total == 0 || !showCategory) {
                 binding.tvNoteCategorize.isGone =true
             } else {
                 binding.tvNoteCategorize.isVisible = true
@@ -122,7 +122,7 @@ class MainAdapter(
                 val remaining = total - (i + 1)
                 val suffix = if (remaining > 0) " (+ $remaining)" else ""
 
-                if ((potentialName + suffix).length <= LIMIT) {
+                if ((potentialName + suffix).length <= limit) {
                     result = potentialName
                     addedCount++
                 } else {

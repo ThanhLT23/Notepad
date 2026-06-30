@@ -145,7 +145,6 @@ object DialogHelpers {
     ) {
         val message = context.getString(R.string.show_confirm_delete_dialog_message)
         MaterialAlertDialogBuilder(context)
-            .setTitle(context.getString(R.string.delete_title))
             .setMessage(message)
             .setPositiveButton(context.getString(R.string.option_ok)) { dialog, _ ->
                 onDelete()
@@ -163,13 +162,13 @@ object DialogHelpers {
         onSortAction: (Int) -> Unit
     ) {
         val options = arrayOf(
-            "edit date: from newest",
-            "edit date: from oldest",
-            "title: A to Z",
-            "title: Z to A",
-            "creation date: from newest",
-            "creation date: from oldest",
-            "color: in order as shown on color palette"
+            context.getString(R.string.edit_date_from_newest),
+            context.getString(R.string.edit_date_from_oldest),
+            context.getString(R.string.title_a_to_z),
+            context.getString(R.string.title_z_to_a),
+            context.getString(R.string.creation_date_from_newest),
+            context.getString(R.string.creation_date_from_oldest),
+            context.getString(R.string.color_in_order_as_shown_on_color_palette)
         )
         var selectedOption = currentOption
         MaterialAlertDialogBuilder(context)

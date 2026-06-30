@@ -29,6 +29,7 @@
     <color name="highlightColor">#aafe8e</color>
     <color name="highlightSelect">#d4d329</color>
     <color name="white_80">#80FFFFFF</color>
+    <color name="dialog_option_color">#776C45</color>
 
     <!-- Light peach pink -->
     <color name="color_light_peach_pink">#ffaead</color>

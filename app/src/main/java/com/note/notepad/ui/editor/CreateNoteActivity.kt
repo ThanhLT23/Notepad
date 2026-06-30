@@ -1,8 +1,6 @@
 package com.note.notepad.ui.editor
 
-import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.inputmethodservice.InputMethodService
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
