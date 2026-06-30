@@ -13,6 +13,7 @@ class UndoRedoManager(private val editText: EditText) {
     private var isTextChangedByCode = false
 
     private var textBeforeChange = ""
+    var onStateChanged: (() -> Unit)? = null
 
     init {
         lastSavedText = editText.text.toString()
@@ -33,6 +34,7 @@ class UndoRedoManager(private val editText: EditText) {
                 if (isSpaceOrEnter ||isBulkChange) {
                     saveHistory(textBeforeChange, currentText)
                 }
+                onStateChanged?.invoke()
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -53,6 +55,7 @@ class UndoRedoManager(private val editText: EditText) {
         if (isChanged) {
             redoStack.clear()
         }
+        onStateChanged?.invoke()
     }
 
     fun undo() {
@@ -67,6 +70,7 @@ class UndoRedoManager(private val editText: EditText) {
             val previousText = undoStack.peek() ?: ""
             updateText(previousText)
         }
+        onStateChanged?.invoke()
     }
 
     fun redo() {
@@ -74,6 +78,7 @@ class UndoRedoManager(private val editText: EditText) {
         val nextText = redoStack.pop()
         undoStack.push(nextText)
         updateText(nextText)
+        onStateChanged?.invoke()
     }
 
     private fun updateText(newText: String) {
@@ -92,6 +97,7 @@ class UndoRedoManager(private val editText: EditText) {
         undoStack.push(lastSavedText)
         textBeforeChange = lastSavedText
         isTextChangedByCode = false
+        onStateChanged?.invoke()
     }
 
     fun undoAll() {
@@ -103,5 +109,15 @@ class UndoRedoManager(private val editText: EditText) {
         redoStack.clear()
         undoStack.push(initText)
         updateText(initText)
+        onStateChanged?.invoke()
+    }
+
+    fun canUndo(): Boolean {
+        val currentText = editText.text.toString()
+        return currentText != lastSavedText || undoStack.size > 1
+    }
+
+    fun canRedo(): Boolean {
+        return redoStack.isNotEmpty()
     }
 }

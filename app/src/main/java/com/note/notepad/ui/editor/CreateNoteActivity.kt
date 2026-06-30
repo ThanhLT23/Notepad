@@ -2,6 +2,8 @@ package com.note.notepad.ui.editor
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -64,6 +66,7 @@ class CreateNoteActivity : AppCompatActivity() {
                 if (categoryId != -1 && categoryId != -2) listOf(categoryId) else emptyList()
         }
         undoNotes = UndoRedoManager(binding.edtContent)
+        undoNotes.onStateChanged = { invalidateOptionsMenu() }
         searchManager = SearchManager(binding.edtContent)
     }
 
@@ -272,6 +275,29 @@ class CreateNoteActivity : AppCompatActivity() {
         menu?.findItem(R.id.menu_search_count)?.isVisible = isSearchMode
         menu?.findItem(R.id.menu_search_trigger)?.isVisible = !isSearchMode
         menu?.findItem(R.id.menu_search_up)?.isVisible = isSearchMode
+
+        val undoItem = menu?.findItem(R.id.menu_undo)
+        val canUndo = undoNotes.canUndo()
+        undoItem?.isEnabled = canUndo
+
+        val title = getString(R.string.undo_menu)
+        val spannableTitle = SpannableString(title)
+        val color = if (canUndo) {
+            ContextCompat.getColor(this, R.color.white)
+        } else {
+            ContextCompat.getColor(this, R.color.white_80)
+        }
+        spannableTitle.setSpan(ForegroundColorSpan(color), 0, spannableTitle.length, 0)
+        undoItem?.title = spannableTitle
+
+        val redoItem = menu?.findItem(R.id.menu_redo)
+        val canRedo = undoNotes.canRedo()
+        redoItem?.isEnabled = canRedo
+        redoItem?.icon?.alpha = if (canRedo) 255 else 130
+
+        val undoAllItem = menu?.findItem(R.id.menu_undo_all)
+        undoAllItem?.isEnabled = canUndo
+        undoAllItem?.icon?.alpha = if (canUndo) 255 else 130
 
         return super.onPrepareOptionsMenu(menu)
     }
