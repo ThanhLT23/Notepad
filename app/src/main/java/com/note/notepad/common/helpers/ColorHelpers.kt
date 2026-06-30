@@ -10,16 +10,19 @@ object ColorHelpers {
 
     private data class ColorMapper(
         val mainColor: Int,
+        val appBarColor: Int,
         val start: Int,
         val end: Int,
         val startSelected: Int,
         val selected: Int,
         val border: Int
     )
+    private var actualAppBarMap: Map<Int, Int>? = null
 
     private val colorConfigs = listOf(
         ColorMapper(
             R.color.color_light_peach_pink,
+            R.color.bg_color_light_peach_pink,
             R.color.note_pink_start,
             R.color.color_light_peach_pink,
             R.color.note_pink_start_selected,
@@ -28,6 +31,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_peach_orange,
+            R.color.bg_color_peach_orange,
             R.color.note_orange_start,
             R.color.color_peach_orange,
             R.color.note_orange_start_selected,
@@ -36,6 +40,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_pastel_yellow,
+            R.color.bg_color_pastel_yellow,
             R.color.note_yellow_start,
             R.color.color_pastel_yellow,
             R.color.note_yellow_start_selected,
@@ -44,6 +49,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_pastel_green,
+            R.color.bg_color_pastel_green,
             R.color.note_green_start,
             R.color.color_pastel_green,
             R.color.note_green_start_selected,
@@ -52,6 +58,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_pastel_aqua,
+            R.color.bg_color_pastel_aqua,
             R.color.note_aqua_start,
             R.color.color_pastel_aqua,
             R.color.note_aqua_start_selected,
@@ -60,6 +67,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_soft_blue,
+            R.color.bg_color_soft_blue,
             R.color.note_blue_start,
             R.color.color_soft_blue,
             R.color.note_blue_start_selected,
@@ -68,6 +76,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_soft_purple,
+            R.color.bg_color_soft_purple,
             R.color.note_purple_start,
             R.color.color_soft_purple,
             R.color.note_purple_start_selected,
@@ -76,6 +85,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_pastel_pink,
+            R.color.bg_color_pastel_pink,
             R.color.note_pastel_pink_start,
             R.color.color_pastel_pink,
             R.color.note_pastel_pink_start_selected,
@@ -84,6 +94,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_off_white,
+            R.color.bg_color_off_white,
             R.color.note_white_start,
             R.color.color_off_white,
             R.color.note_white_start_selected,
@@ -92,6 +103,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_pastel_blue,
+            R.color.bg_color_pastel_blue,
             R.color.note_pastel_blue_start,
             R.color.color_pastel_blue,
             R.color.note_pastel_blue_start_selected,
@@ -100,6 +112,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_light_aqua,
+            R.color.bg_color_light_aqua,
             R.color.note_light_aqua_start,
             R.color.color_light_aqua,
             R.color.note_light_aqua_start_selected,
@@ -108,6 +121,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_cream_white,
+            R.color.bg_color_cream_white,
             R.color.note_cream_white_start,
             R.color.color_cream_white,
             R.color.note_cream_white_start_selected,
@@ -116,6 +130,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_vanilla,
+            R.color.bg_color_vanilla,
             R.color.note_vanilla_start,
             R.color.color_vanilla,
             R.color.note_vanilla_start_selected,
@@ -124,6 +139,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_soft_rose,
+            R.color.bg_color_soft_rose,
             R.color.note_soft_rose_start,
             R.color.color_soft_rose,
             R.color.note_soft_rose_start_selected,
@@ -132,6 +148,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_light_lavender,
+            R.color.bg_color_light_lavender,
             R.color.note_lavender_start,
             R.color.color_light_lavender,
             R.color.note_lavender_start_selected,
@@ -140,6 +157,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_muted_blue,
+            R.color.bg_color_light_muted_blue,
             R.color.note_muted_blue_start,
             R.color.color_muted_blue,
             R.color.note_muted_blue_start_selected,
@@ -148,6 +166,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_mist_blue,
+            R.color.bg_color_light_mist_blue,
             R.color.note_mist_blue_start,
             R.color.color_mist_blue,
             R.color.note_mist_blue_start_selected,
@@ -156,6 +175,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_mint_aqua,
+            R.color.bg_color_light_mint_aqua,
             R.color.note_mint_aqua_start,
             R.color.color_mint_aqua,
             R.color.note_mint_aqua_start_selected,
@@ -164,6 +184,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_mist_green,
+            R.color.bg_color_mist_green,
             R.color.note_mist_green_start,
             R.color.color_mist_green,
             R.color.note_mist_green_start_selected,
@@ -172,6 +193,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_dusty_rose,
+            R.color.bg_color_dusty_rose,
             R.color.note_dusty_rose_start,
             R.color.color_dusty_rose,
             R.color.note_dusty_rose_start_selected,
@@ -180,6 +202,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_plum_purple,
+            R.color.bg_color_plum_purple,
             R.color.note_plum_purple_start,
             R.color.color_plum_purple,
             R.color.note_plum_purple_start_selected,
@@ -188,6 +211,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_berry_pink,
+            R.color.bg_color_berry_pink,
             R.color.note_berry_pink_start,
             R.color.color_berry_pink,
             R.color.note_berry_pink_start_selected,
@@ -196,6 +220,7 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_coral_red,
+            R.color.bg_color_coral_red,
             R.color.note_coral_red_start,
             R.color.color_coral_red,
             R.color.note_coral_red_start_selected,
@@ -204,20 +229,23 @@ object ColorHelpers {
         ),
         ColorMapper(
             R.color.color_coral_orange,
+            R.color.bg_color_peach_orange,
             R.color.note_coral_orange_start,
             R.color.color_coral_orange,
             R.color.note_coral_orange_start_selected,
             R.color.note_coral_orange_selected,
             R.color.note_coral_orange_border
-        ),ColorMapper(
+        ), ColorMapper(
             R.color.color_golden_yellow,
+            R.color.bg_color_golden_yellow,
             R.color.note_golden_yellow_start,
             R.color.color_golden_yellow,
             R.color.note_golden_yellow_start_selected,
             R.color.note_golden_yellow_selected,
             R.color.note_golden_yellow_border
-        ),ColorMapper(
+        ), ColorMapper(
             R.color.color_honey_cream,
+            R.color.bg_color_honey_cream,
             R.color.note_honey_cream_start,
             R.color.color_honey_cream,
             R.color.note_honey_cream_start_selected,
@@ -250,5 +278,14 @@ object ColorHelpers {
 
     fun getMainColors(context: Context): List<Int> {
         return colorConfigs.map { ContextCompat.getColor(context, it.mainColor) }
+    }
+
+    fun getAppBarColor(context: Context, noteColor: Int): Int {
+        if (actualAppBarMap == null) {
+            actualAppBarMap = colorConfigs.associate {
+                ContextCompat.getColor(context, it.mainColor) to ContextCompat.getColor(context, it.appBarColor)
+            }
+        }
+        return actualAppBarMap!![noteColor] ?: ContextCompat.getColor(context, R.color.primaryColor)
     }
 }

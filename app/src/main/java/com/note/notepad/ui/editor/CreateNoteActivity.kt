@@ -7,24 +7,24 @@ import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.note.notepad.R
+import com.note.notepad.common.base.BaseActivity
 import com.note.notepad.common.delegate.viewBinding
 import com.note.notepad.common.extension.showToast
+import com.note.notepad.common.helpers.ColorHelpers
 import com.note.notepad.common.helpers.DialogHelpers
 import com.note.notepad.databinding.ActivityCreateNoteBinding
 import com.note.notepad.utils.AppConstant
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreateNoteActivity : AppCompatActivity() {
-    private val binding by viewBinding(ActivityCreateNoteBinding::inflate)
+class CreateNoteActivity : BaseActivity<ActivityCreateNoteBinding>() {
+   override val binding by viewBinding(ActivityCreateNoteBinding::inflate)
     private val viewModel: CreateNoteViewModel by viewModel()
     private lateinit var undoNotes: UndoRedoManager
     private lateinit var searchManager: SearchManager
@@ -39,8 +39,6 @@ class CreateNoteActivity : AppCompatActivity() {
     private var lastSavedColor = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
@@ -48,13 +46,9 @@ class CreateNoteActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, 0, systemBars.right, bottomInset)
             insets
         }
-
-        initView()
-        initListener()
-        observeData()
     }
 
-    private fun initView() {
+    override fun initViews() {
         setSupportActionBar(binding.tbEditor)
         val noteId = intent.getIntExtra(AppConstant.EXTRA_NOTE_ID, -1)
         pendingQuery = intent.getStringExtra(AppConstant.EXTRA_SEARCH_QUERY) ?: ""
@@ -70,7 +64,7 @@ class CreateNoteActivity : AppCompatActivity() {
         searchManager = SearchManager(binding.edtContent)
     }
 
-    private fun initListener() {
+    override fun initListener() {
         binding.tbEditor.setNavigationOnClickListener {
             if (isSearchMode) {
                 toolBarMenu?.findItem(R.id.menu_search_editor)?.collapseActionView()
@@ -85,7 +79,7 @@ class CreateNoteActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeData() {
+    override fun observeData() {
         lifecycleScope.launch {
             viewModel.currentNote.collect { note ->
                 note?.let {
@@ -119,12 +113,12 @@ class CreateNoteActivity : AppCompatActivity() {
                 val displayABColor = if (isDefault) {
                     ContextCompat.getColor(this@CreateNoteActivity, R.color.primaryColor)
                 } else {
-                    getAppBarColor(color)
+                    ColorHelpers.getAppBarColor(this@CreateNoteActivity, color)
                 }
                 val displayBGColor = if (isDefault) {
                     ContextCompat.getColor(this@CreateNoteActivity, R.color.backgroundColor)
                 } else {
-                    getAppBarColor(color)
+                    ColorHelpers.getAppBarColor(this@CreateNoteActivity, color)
                 }
 
                 val editorBg = binding.clEditor.background as? GradientDrawable
@@ -135,47 +129,6 @@ class CreateNoteActivity : AppCompatActivity() {
         }
     }
 
-    private val colorMapping = mapOf(
-        R.color.color_light_peach_pink to R.color.bg_color_light_peach_pink,
-        R.color.color_peach_orange to R.color.bg_color_peach_orange,
-        R.color.color_pastel_yellow to R.color.bg_color_pastel_yellow,
-        R.color.color_pastel_green to R.color.bg_color_pastel_green,
-        R.color.color_pastel_aqua to R.color.bg_color_pastel_aqua,
-        R.color.color_soft_blue to R.color.bg_color_soft_blue,
-        R.color.color_soft_purple to R.color.bg_color_soft_purple,
-        R.color.color_pastel_pink to R.color.bg_color_pastel_pink,
-        R.color.color_off_white to R.color.bg_color_off_white,
-        R.color.color_pastel_blue to R.color.bg_color_pastel_blue,
-        R.color.color_light_aqua to R.color.bg_color_light_aqua,
-        R.color.color_cream_white to R.color.bg_color_cream_white,
-        R.color.color_vanilla to R.color.bg_color_vanilla,
-        R.color.color_soft_rose to R.color.bg_color_soft_rose,
-        R.color.color_light_lavender to R.color.bg_color_light_lavender,
-        R.color.color_muted_blue to R.color.bg_color_light_muted_blue,
-        R.color.color_mist_blue to R.color.bg_color_light_mist_blue,
-        R.color.color_mint_aqua to R.color.bg_color_light_mint_aqua,
-        R.color.color_mist_green to R.color.bg_color_mist_green,
-        R.color.color_dusty_rose to R.color.bg_color_dusty_rose,
-        R.color.color_plum_purple to R.color.bg_color_plum_purple,
-        R.color.color_berry_pink to R.color.bg_color_berry_pink,
-        R.color.color_coral_red to R.color.bg_color_coral_red,
-        R.color.color_coral_orange to R.color.bg_color_peach_orange,
-        R.color.color_golden_yellow to R.color.bg_color_golden_yellow,
-        R.color.color_honey_cream to R.color.bg_color_honey_cream
-    )
-
-    private val actualColorMap by lazy {
-        colorMapping.map { (keyRes, valRes) ->
-            val actualKeyColor = ContextCompat.getColor(this, keyRes)
-            val actualValueColor = ContextCompat.getColor(this, valRes)
-            actualKeyColor to actualValueColor
-        }.toMap()
-    }
-
-    private fun getAppBarColor(noteColor: Int): Int {
-        return actualColorMap[noteColor] ?: ContextCompat.getColor(this, R.color.primaryColor)
-
-    }
 
     private fun autoSave(): Boolean {
         val currentTitle = binding.edtTitle.text.toString()

@@ -2,6 +2,7 @@ package com.note.notepad.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.note.notepad.common.enums.SortOption
 import com.note.notepad.data.repository.CategoryRepository
 import com.note.notepad.data.repository.NoteRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,7 +25,7 @@ class MainViewModel(
     val selectedIds = _selectedIds.asStateFlow()
     private val _isSelectionMode = MutableStateFlow(false)
     val isSelectionMode = _isSelectionMode.asStateFlow()
-    private val _sortOption = MutableStateFlow(0)
+    private val _sortOption = MutableStateFlow(SortOption.TIME_EDITED_DESC)
     val sortOption = _sortOption.asStateFlow()
     private val _searchOption = MutableStateFlow("")
     private val _searchQuery = MutableStateFlow("")
@@ -58,20 +59,18 @@ class MainViewModel(
         }
 
         when (option) {
-            0 -> searchFiltered.sortedByDescending { it.note.lastTime }
-            1 -> searchFiltered.sortedBy { it.note.lastTime }
-            2 -> searchFiltered.sortedByDescending { it.note.title }
-            3 -> searchFiltered.sortedBy { it.note.title }
-            4 -> searchFiltered.sortedByDescending { it.note.creationTime }
-            5 -> searchFiltered.sortedBy { it.note.creationTime }
-            6 -> {
+            SortOption.TIME_EDITED_DESC -> searchFiltered.sortedByDescending { it.note.lastTime }
+            SortOption.TIME_EDITED_ASC -> searchFiltered.sortedBy { it.note.lastTime }
+            SortOption.TITLE_A_TO_Z -> searchFiltered.sortedByDescending { it.note.title }
+            SortOption.TITLE_Z_TO_A -> searchFiltered.sortedBy { it.note.title }
+            SortOption.TIME_CREATED_DESC -> searchFiltered.sortedByDescending { it.note.creationTime }
+            SortOption.TIME_CREATED_ASC -> searchFiltered.sortedBy { it.note.creationTime }
+            SortOption.COLOR -> {
                 searchFiltered.sortedBy { item ->
                     val index = colorOrderList.indexOf(item.note.color)
                     if (index == -1) Int.MAX_VALUE else index
                 }
             }
-
-            else -> searchFiltered
         }
     }.stateIn(
         scope = viewModelScope,
@@ -140,7 +139,7 @@ class MainViewModel(
     }
 
     fun sortNotes(option: Int) {
-        _sortOption.value = option
+        _sortOption.value = SortOption.fromInt(option)
     }
 
     fun searchNotes(query: String) {

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.note.notepad.R
+import com.note.notepad.common.enums.SortOption
 import com.note.notepad.common.extension.dp
 import com.note.notepad.common.helpers.ColorHelpers
 import com.note.notepad.data.local.model.relation.NoteWithCategories
@@ -57,7 +58,9 @@ class MainAdapter(
                 binding.tvNoteContent.isGone = true
             }
 
-            val isCreationTime = currentSortOption == 4 || currentSortOption == 5
+            val isCreationTime = currentSortOption == SortOption.TIME_CREATED_DESC ||
+                                 currentSortOption == SortOption.TIME_CREATED_ASC
+
             val displayTime = if (isCreationTime) note.creationTime else note.lastTime
             val dateString = dateFormat.format(Date(displayTime))
             if (isCreationTime) {
@@ -180,7 +183,7 @@ class MainAdapter(
     private val selectedIds = mutableSetOf<Int>()
     var isSelectionMode = false
     var currentSearchQuery: String = ""
-    var currentSortOption = 0
+    var currentSortOption = SortOption.TIME_EDITED_DESC
 
     fun updateSelection(newSelectedIds: Set<Int>) {
         val oldSelected = selectedIds.toSet()
@@ -201,7 +204,7 @@ class MainAdapter(
         }
     }
 
-    fun updateSortOption(option: Int) {
+    fun updateSortOption(option: SortOption) {
         if (currentSortOption != option) {
             currentSortOption = option
             notifyItemRangeChanged(0, currentList.size, AppConstant.UPDATE_TIME_TEXT)
