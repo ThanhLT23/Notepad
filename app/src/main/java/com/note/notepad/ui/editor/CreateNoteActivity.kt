@@ -9,8 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.note.notepad.R
 import com.note.notepad.common.delegate.viewBinding
@@ -39,11 +37,6 @@ class CreateNoteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         initView()
         initListener()
@@ -130,12 +123,46 @@ class CreateNoteActivity : AppCompatActivity() {
         }
     }
 
+    private val colorMapping = mapOf(
+        R.color.color_light_peach_pink to R.color.bg_color_light_peach_pink,
+        R.color.color_peach_orange to R.color.bg_color_peach_orange,
+        R.color.color_pastel_yellow to R.color.bg_color_pastel_yellow,
+        R.color.color_pastel_green to R.color.bg_color_pastel_green,
+        R.color.color_pastel_aqua to R.color.bg_color_pastel_aqua,
+        R.color.color_soft_blue to R.color.bg_color_soft_blue,
+        R.color.color_soft_purple to R.color.bg_color_soft_purple,
+        R.color.color_pastel_pink to R.color.bg_color_pastel_pink,
+        R.color.color_off_white to R.color.bg_color_off_white,
+        R.color.color_pastel_blue to R.color.bg_color_pastel_blue,
+        R.color.color_light_aqua to R.color.bg_color_light_aqua,
+        R.color.color_cream_white to R.color.bg_color_cream_white,
+        R.color.color_vanilla to R.color.bg_color_vanilla,
+        R.color.color_soft_rose to R.color.bg_color_soft_rose,
+        R.color.color_light_lavender to R.color.bg_color_light_lavender,
+        R.color.color_muted_blue to R.color.bg_color_light_muted_blue,
+        R.color.color_mist_blue to R.color.bg_color_light_mist_blue,
+        R.color.color_mint_aqua to R.color.bg_color_light_mint_aqua,
+        R.color.color_mist_green to R.color.bg_color_mist_green,
+        R.color.color_dusty_rose to R.color.bg_color_dusty_rose,
+        R.color.color_plum_purple to R.color.bg_color_plum_purple,
+        R.color.color_berry_pink to R.color.bg_color_berry_pink,
+        R.color.color_coral_red to R.color.bg_color_coral_red,
+        R.color.color_coral_orange to R.color.bg_color_peach_orange,
+        R.color.color_golden_yellow to R.color.bg_color_golden_yellow,
+        R.color.color_honey_cream to R.color.bg_color_honey_cream
+    )
+
+    private val actualColorMap by lazy {
+        colorMapping.map { (keyRes, valRes) ->
+            val actualKeyColor = ContextCompat.getColor(this, keyRes)
+            val actualValueColor = ContextCompat.getColor(this, valRes)
+            actualKeyColor to actualValueColor
+        }.toMap()
+    }
+
     private fun getAppBarColor(noteColor: Int): Int {
-        return when (noteColor) {
-            ContextCompat.getColor(this, R.color.color_light_peach_pink) ->
-                ContextCompat.getColor(this, R.color.bg_color_light_peach_pink)
-            else -> ContextCompat.getColor(this, R.color.primaryColor)
-        }
+        return actualColorMap[noteColor] ?: ContextCompat.getColor(this, R.color.primaryColor)
+
     }
 
     private fun autoSave(): Boolean {
@@ -266,7 +293,7 @@ class CreateNoteActivity : AppCompatActivity() {
                 searchItem?.isVisible = true
                 item.isVisible = false
                 binding.root.post {
-                   searchItem?.expandActionView()
+                    searchItem?.expandActionView()
                 }
                 true
             }
@@ -314,6 +341,7 @@ class CreateNoteActivity : AppCompatActivity() {
                 }
                 true
             }
+
             R.id.menu_editor_colorize -> {
                 DialogHelpers.showColorDialog(this, viewModel.noteColor.value) { color ->
                     viewModel.updateNoteColor(color)

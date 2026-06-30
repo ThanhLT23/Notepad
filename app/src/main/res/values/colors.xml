@@ -39,7 +39,7 @@
 
     <!-- Peach orange -->
     <color name="color_peach_orange">#ffd7a6</color>
-    <color name="bg_color_peach_orange">#550702</color>
+    <color name="bg_color_peach_orange">#533106</color>
     <color name="note_orange_start">#fff0dd</color>
     <color name="note_orange_start_selected">#f8cd88</color>
     <color name="note_orange_selected">#c28a59</color>
@@ -71,10 +71,169 @@
 
     <!-- Soft Blue -->
     <color name="color_soft_blue">#A8BFFD</color>
-    <color name="bg_color_soft_blue">#074A51</color>
+    <color name="bg_color_soft_blue">#111A51</color>
     <color name="note_blue_start">#DCE7FD</color>
     <color name="note_blue_start_selected">#9FBDD4</color>
     <color name="note_blue_selected">#7C808C</color>
     <color name="note_blue_border">#686963</color>
 
+    <!-- Soft Purple -->
+    <color name="color_soft_purple">#C4ADFC</color>
+    <color name="bg_color_soft_purple">#1B0055</color>
+    <color name="note_purple_start">#F4F0FE</color>
+    <color name="note_purple_start_selected">#BDABD4</color>
+    <color name="note_purple_selected">#92748B</color>
+    <color name="note_purple_border">#795F63</color>
+
+    <!-- Pastel Pink -->
+    <color name="color_pastel_pink">#FFC4FD</color>
+    <color name="bg_color_pastel_pink">#5E0059</color>
+    <color name="note_pastel_pink_start">#FFFDFF</color>
+    <color name="note_pastel_pink_start_selected">#FDC2D8</color>
+    <color name="note_pastel_pink_selected">#C3828B</color>
+    <color name="note_pastel_pink_border">#A36B62</color>
+
+    <!-- Off White -->
+    <color name="color_off_white">#FFFFFB</color>
+    <color name="bg_color_off_white">#606811</color>
+    <color name="note_white_start">#FFFFFF</color>
+    <color name="note_white_start_selected">#FAFCD6</color>
+    <color name="note_white_selected">#BFA589</color>
+    <color name="note_white_border">#A28A63</color>
+
+    <!-- Pastel Blue -->
+    <color name="color_pastel_blue">#D9E4FE</color>
+    <color name="bg_color_pastel_blue">#151D5C</color>
+    <color name="note_pastel_blue_start">#FDFEFE</color>
+    <color name="note_pastel_blue_start_selected">#D3E2D9</color>
+    <color name="note_pastel_blue_selected">#A3988D</color>
+    <color name="note_pastel_blue_border">#897D63</color>
+
+    <!-- Light Aqua -->
+    <color name="color_light_aqua">#D8F8F8</color>
+    <color name="bg_color_light_aqua">#0F4F4F</color>
+    <color name="note_light_aqua_start">#FDFFFE</color>
+    <color name="note_light_aqua_start_selected">#D2F4D3</color>
+    <color name="note_light_aqua_selected">#A4A78B</color>
+    <color name="note_light_aqua_border">#878761</color>
+
+    <!-- Cream White -->
+    <color name="color_cream_white">#FEFFEB</color>
+    <color name="bg_color_cream_white">#5E6410</color>
+    <color name="note_cream_white_start">#FFFFFD</color>
+    <color name="note_cream_white_start_selected">#F7FBC7</color>
+    <color name="note_cream_white_selected">#C1A982</color>
+    <color name="note_cream_white_border">#A18B5C</color>
+
+    <!-- Vanilla -->
+    <color name="color_vanilla">#FDF2D5</color>
+    <color name="bg_color_vanilla">#5B4008</color>
+    <color name="note_vanilla_start">#FFFFFD</color>
+    <color name="note_vanilla_start_selected">#F8EDB6</color>
+    <color name="note_vanilla_selected">#C2A379</color>
+    <color name="note_vanilla_border">#A18353</color>
+
+    <!-- Soft Rose -->
+    <color name="color_soft_rose">#FAE1DF</color>
+    <color name="bg_color_soft_rose">#52100E</color>
+    <color name="note_soft_rose_start">#FEFEFE</color>
+    <color name="note_soft_rose_start_selected">#F5DDBF</color>
+    <color name="note_soft_rose_selected">#C29981</color>
+    <color name="note_soft_rose_border">#A07A57</color>
+
+    <!-- Light Lavender -->
+    <color name="color_light_lavender">#E6D3EE</color>
+    <color name="bg_color_light_lavender">#361442</color>
+    <color name="note_lavender_start">#FFFFFF</color>
+    <color name="note_lavender_start_selected">#DFCEC7</color>
+    <color name="note_lavender_selected">#B28F86</color>
+    <color name="note_lavender_border">#93735E</color>
+
+    <!-- Muted Blue -->
+    <color name="color_muted_blue">#8698CC</color>
+    <color name="bg_color_light_muted_blue">#151B2E</color>
+    <color name="note_muted_blue_start">#A6B3D9</color>
+    <color name="note_muted_blue_start_selected">#8195AC</color>
+    <color name="note_muted_blue_selected">#636571</color>
+    <color name="note_muted_blue_border">#52534E</color>
+
+    <!-- Mist Blue -->
+    <color name="color_mist_blue">#97B6CF</color>
+    <color name="bg_color_light_mist_blue">#182532</color>
+    <color name="note_mist_blue_start">#BBCEDF</color>
+    <color name="note_mist_blue_start_selected">#94B3B1</color>
+    <color name="note_mist_blue_selected">#727A74</color>
+    <color name="note_mist_blue_border">#5E6350</color>
+
+    <!-- Mint Aqua -->
+    <color name="color_mint_aqua">#B8E0D5</color>
+    <color name="bg_color_light_mint_aqua">#18392E</color>
+    <color name="note_mint_aqua_start">#E1F3ED</color>
+    <color name="note_mint_aqua_start_selected">#B3DDB5</color>
+    <color name="note_mint_aqua_selected">#8C9778</color>
+    <color name="note_mint_aqua_border">#747852</color>
+
+    <!-- Mist Green -->
+    <color name="color_mist_green">#D5EADF</color>
+    <color name="bg_color_mist_green">#18392E</color>
+    <color name="note_mist_green_start">#FDFFFE</color>
+    <color name="note_mist_green_start_selected">#CFE6BE</color>
+    <color name="note_mist_green_selected">#A29B7D</color>
+    <color name="note_mist_green_border">#877F57</color>
+
+    <!-- Dusty Rose -->
+    <color name="color_dusty_rose">#EBC3D5</color>
+    <color name="bg_color_dusty_rose">#401729</color>
+    <color name="note_dusty_rose_start">#FCF3F7</color>
+    <color name="note_dusty_rose_start_selected">#E4C1B4</color>
+    <color name="note_dusty_rose_selected">#B18275</color>
+    <color name="note_dusty_rose_border">#956B54</color>
+
+    <!-- Plum Purple -->
+    <color name="color_plum_purple">#8E4D8E</color>
+    <color name="bg_color_plum_purple">#1D0F1C</color>
+    <color name="note_plum_purple_start">#A158A2</color>
+    <color name="note_plum_purple_start_selected">#8B4E78</color>
+    <color name="note_plum_purple_selected">#6A344E</color>
+    <color name="note_plum_purple_border">#592C37</color>
+
+    <!-- Berry Pink -->
+    <color name="color_berry_pink">#BE5090</color>
+    <color name="bg_color_berry_pink">#270F1D</color>
+    <color name="note_berry_pink_start">#C76BA0</color>
+    <color name="note_berry_pink_start_selected">#B94F77</color>
+    <color name="note_berry_pink_selected">#8D364D</color>
+    <color name="note_berry_pink_border">#782E38</color>
+
+    <!-- Coral Red -->
+    <color name="color_coral_red">#FC6A63</color>
+    <color name="bg_color_coral_red">#460602</color>
+    <color name="note_coral_red_start">#FE9996</color>
+    <color name="note_coral_red_start_selected">#FE9996</color>
+    <color name="note_coral_red_selected">#C24738</color>
+    <color name="note_coral_red_border">#A33B27</color>
+
+    <!-- Coral Orange -->
+    <color name="color_coral_orange">#FC8C3B</color>
+    <color name="bg_color_coral_orange">#3C1B02</color>
+    <color name="note_coral_orange_start">#FBA563</color>
+    <color name="note_coral_orange_start_selected">#F98A36</color>
+    <color name="note_coral_orange_selected">#C05D24</color>
+    <color name="note_coral_orange_border">#A24C1B</color>
+
+    <!-- Golden Yellow -->
+    <color name="color_golden_yellow">#FBAD28</color>
+    <color name="bg_color_golden_yellow">#332303</color>
+    <color name="note_golden_yellow_start">#F8AA27</color>
+    <color name="note_golden_yellow_start_selected">#F7A927</color>
+    <color name="note_golden_yellow_selected">#BF7218</color>
+    <color name="note_golden_yellow_border">#A25E12</color>
+
+    <!-- Honey Cream -->
+    <color name="color_honey_cream">#FBD786</color>
+    <color name="bg_color_honey_cream">#332303</color>
+    <color name="note_honey_cream_start">#FBE9BA</color>
+    <color name="note_honey_cream_start_selected">#F5D373</color>
+    <color name="note_honey_cream_selected">#C18F4C</color>
+    <color name="note_honey_cream_border">#A17536</color>
 </resources>

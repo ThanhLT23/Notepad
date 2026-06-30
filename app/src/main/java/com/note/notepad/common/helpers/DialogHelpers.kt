@@ -320,7 +320,27 @@ object DialogHelpers {
             ContextCompat.getColor(context, R.color.color_pastel_yellow),
             ContextCompat.getColor(context, R.color.color_pastel_green),
             ContextCompat.getColor(context, R.color.color_pastel_aqua),
-            ContextCompat.getColor(context, R.color.color_soft_blue)
+            ContextCompat.getColor(context, R.color.color_soft_blue),
+            ContextCompat.getColor(context, R.color.color_soft_purple),
+            ContextCompat.getColor(context, R.color.color_pastel_pink),
+            ContextCompat.getColor(context, R.color.color_off_white),
+            ContextCompat.getColor(context, R.color.color_pastel_blue),
+            ContextCompat.getColor(context, R.color.color_light_aqua),
+            ContextCompat.getColor(context, R.color.color_cream_white),
+            ContextCompat.getColor(context, R.color.color_vanilla),
+            ContextCompat.getColor(context, R.color.color_soft_rose),
+            ContextCompat.getColor(context, R.color.color_light_lavender),
+            ContextCompat.getColor(context, R.color.color_muted_blue),
+            ContextCompat.getColor(context, R.color.color_mist_blue),
+            ContextCompat.getColor(context, R.color.color_mint_aqua),
+            ContextCompat.getColor(context, R.color.color_mist_green),
+            ContextCompat.getColor(context, R.color.color_dusty_rose),
+            ContextCompat.getColor(context, R.color.color_plum_purple),
+            ContextCompat.getColor(context, R.color.color_berry_pink),
+            ContextCompat.getColor(context, R.color.color_coral_red),
+            ContextCompat.getColor(context, R.color.color_coral_orange),
+            ContextCompat.getColor(context, R.color.color_golden_yellow),
+            ContextCompat.getColor(context, R.color.color_honey_cream)
         )
         var tempSelectedColor = currentColor
         rvColor.layoutManager = GridLayoutManager(context, 6)
