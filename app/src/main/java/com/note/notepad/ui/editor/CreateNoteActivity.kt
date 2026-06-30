@@ -1,11 +1,14 @@
 package com.note.notepad.ui.editor
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
+import android.inputmethodservice.InputMethodService
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -93,6 +96,14 @@ class CreateNoteActivity : BaseActivity<ActivityCreateNoteBinding>() {
                         lastSavedCategoryIds = viewModel.selectedCategoryIds.value
                         lastSavedColor = it.color
                         undoNotes.saveCheckpoints()
+                        val focusView = if (displayTitle.isEmpty()) binding.edtTitle else binding.edtContent
+                        focusView.post {
+                            focusView.requestFocus()
+                            focusView.setSelection(focusView.text.length)
+
+                            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.showSoftInput(focusView, InputMethodManager.SHOW_IMPLICIT)
+                        }
                     }
                     isNoteLoad = true
                     checkAndTriggerSearch()

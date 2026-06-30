@@ -152,6 +152,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 menu.findItem(R.id.menu_select_all)?.isVisible = isMode
                 menu.findItem(R.id.menu_delete)?.isVisible = isMode
                 menu.findItem(R.id.menu_categorize)?.isVisible = isMode
+                menu.findItem(R.id.menu_colorize)?.isVisible = isMode
                 menu.findItem(R.id.menu_sort)?.isVisible = !isMode
                 menu.findItem(R.id.menu_search)?.isVisible = !isMode
             }
