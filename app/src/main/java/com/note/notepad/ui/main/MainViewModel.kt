@@ -16,7 +16,8 @@ import kotlin.collections.emptyList
 
 class MainViewModel(
     private val repository: NoteRepository,
-    categoryRepository: CategoryRepository) : ViewModel() {
+    categoryRepository: CategoryRepository
+) : ViewModel() {
     private val _navigateToEdit = MutableSharedFlow<Int>()
     val navigateToEdit = _navigateToEdit.asSharedFlow()
     private val _selectedIds = MutableStateFlow<Set<Int>>(emptySet())
@@ -30,6 +31,7 @@ class MainViewModel(
     val searchQuery = _searchQuery.asStateFlow()
     private val _categoryId = MutableStateFlow(-1)
     val categoryId = _categoryId.asStateFlow()
+    private var colorOrderList: List<Int> = emptyList()
 
     fun setCategory(id: Int) {
         _categoryId.value = id
@@ -40,9 +42,10 @@ class MainViewModel(
     ) { noteWithCat, option, query, catId ->
         val categoryFiltered = when (catId) {
             -1 -> noteWithCat
-            -2 -> noteWithCat.filter { it.category.isEmpty()}
+            -2 -> noteWithCat.filter { it.category.isEmpty() }
             else -> noteWithCat.filter { noteObj ->
-                noteObj.category.any { it.id == catId } }
+                noteObj.category.any { it.id == catId }
+            }
         }
 
         val searchFiltered = if (query.isBlank()) {
@@ -61,6 +64,13 @@ class MainViewModel(
             3 -> searchFiltered.sortedBy { it.note.title }
             4 -> searchFiltered.sortedByDescending { it.note.creationTime }
             5 -> searchFiltered.sortedBy { it.note.creationTime }
+            6 -> {
+                searchFiltered.sortedBy { item ->
+                    val index = colorOrderList.indexOf(item.note.color)
+                    if (index == -1) Int.MAX_VALUE else index
+                }
+            }
+
             else -> searchFiltered
         }
     }.stateIn(
@@ -74,6 +84,7 @@ class MainViewModel(
         started = SharingStarted.WhileSubscribed(),
         initialValue = emptyList()
     )
+
     fun onFabClicked() {
         viewModelScope.launch {
             _navigateToEdit.emit(_categoryId.value)
@@ -153,6 +164,10 @@ class MainViewModel(
             repository.updateNotesColor(ids, color)
             exitSelectionMode()
         }
+    }
+
+    fun updateColorOrder(colors: List<Int>) {
+        this.colorOrderList = colors
     }
 
 }

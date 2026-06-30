@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.note.notepad.R
 import com.note.notepad.common.base.BaseFragment
 import com.note.notepad.common.delegate.viewBinding
+import com.note.notepad.common.helpers.ColorHelpers
 import com.note.notepad.common.helpers.DialogHelpers
 import com.note.notepad.databinding.FragmentHomeBinding
 import com.note.notepad.ui.editor.CreateNoteActivity
@@ -70,6 +71,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     override fun observeData() {
+        viewModel.updateColorOrder(ColorHelpers.getMainColors(requireContext()))
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.noteList.collect { list ->
                 noteAdapter.submitList(list) { binding.rvHome.scrollToPosition(0) }
@@ -191,8 +193,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     }
 
                     R.id.menu_colorize -> {
+                        val firstId = viewModel.selectedIds.value.firstOrNull()
+                        val currentColor = viewModel.noteList.value.find{it.note.id == firstId}?.note?.color?:0
                         DialogHelpers.showColorDialog(
-                            requireContext(), 0) { color ->
+                            requireContext(), currentColor) { color ->
                             viewModel.colorizeSelectedNotes(color)
                         }
                         true

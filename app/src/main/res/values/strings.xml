@@ -60,4 +60,10 @@
     <string name="subtitle_uncategorized">Uncategorized</string>
     <string name="remove_color">REMOVE THE COLOR</string>
     <string name="colorize_title">Colorize</string>
+    <string name="select_category_title">Select category</string>
+    <string name="delete_category_message">Delete category \'%1$s\'? Notes from the category won\'t be deleted.</string>
+    <string name="empty_error_message">Category name cannot be empty</string>
+    <string name="exists_name_error_message">Category with that name already exists.</string>
+    <string name="edit_category_title">Edit category name</string>
+    <string name="select_color_title">Select color</string>
 </resources>

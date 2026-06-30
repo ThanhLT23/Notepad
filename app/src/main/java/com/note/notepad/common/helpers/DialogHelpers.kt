@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.text.InputFilter
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.BackgroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -165,7 +168,8 @@ object DialogHelpers {
             "title: A to Z",
             "title: Z to A",
             "creation date: from newest",
-            "creation date: from oldest"
+            "creation date: from oldest",
+            "color: in order as shown on color palette"
         )
         var selectedOption = currentOption
         MaterialAlertDialogBuilder(context)
@@ -227,7 +231,7 @@ object DialogHelpers {
         layout.addView(tvError)
 
         val dialog = AlertDialog.Builder(context)
-            .setTitle("Edit category name")
+            .setTitle(context.getString(R.string.edit_category_title))
             .setView(layout)
             .setPositiveButton(context.getString(R.string.option_ok), null)
             .setNegativeButton(context.getString(R.string.option_cancel)) { dialog, _ ->
@@ -241,12 +245,12 @@ object DialogHelpers {
                 val newName = editText.text.toString().trim()
                 when {
                     newName.isEmpty() -> {
-                        tvError.text = "Category name cannot be empty"
+                        tvError.text = context.getString(R.string.empty_error_message)
                         tvError.visibility = View.VISIBLE
                     }
 
                     newName == currentName -> {
-                        tvError.text = "Category with that name already exists."
+                        tvError.text = context.getString(R.string.exists_name_error_message)
                         tvError.visibility = View.VISIBLE
                     }
 
@@ -266,7 +270,7 @@ object DialogHelpers {
         onDelete: () -> Unit
     ) {
         MaterialAlertDialogBuilder(context)
-            .setMessage("Delete category \'$cateName\'? Notes from the category won't be deleted.")
+            .setMessage(context.getString(R.string.delete_category_message, cateName))
             .setPositiveButton(context.getString(R.string.option_ok)) { dialog, _ ->
                 onDelete()
                 dialog.dismiss()
@@ -290,7 +294,7 @@ object DialogHelpers {
         val selectedIds = recentSelectedIds.toMutableList()
 
         MaterialAlertDialogBuilder(context)
-            .setTitle("Select category")
+            .setTitle(context.getString(R.string.select_category_title))
             .setMultiChoiceItems(name, checkedItems) { _, which, isChecked ->
                 val catId = allCategories[which].id
                 if (isChecked) selectedIds.add(catId) else selectedIds.remove(catId)
@@ -313,6 +317,7 @@ object DialogHelpers {
         val btnRemoveColor = view.findViewById<Button>(R.id.btnRemoveColor)
         val btnCancel = view.findViewById<Button>(R.id.btnCancel)
         val btnOk = view.findViewById<Button>(R.id.btnOk)
+        val tvTitle = view.findViewById<TextView>(R.id.tvTitle)
 
         val colorList = listOf(
             ContextCompat.getColor(context, R.color.color_light_peach_pink),
@@ -343,9 +348,11 @@ object DialogHelpers {
             ContextCompat.getColor(context, R.color.color_honey_cream)
         )
         var tempSelectedColor = currentColor
+        updateTitleHighlight(tvTitle, tempSelectedColor)
         rvColor.layoutManager = GridLayoutManager(context, 6)
         val adapter = ColorGridAdapter(colorList, tempSelectedColor) { color ->
             tempSelectedColor = color
+            updateTitleHighlight(tvTitle, tempSelectedColor)
         }
         rvColor.adapter = adapter
 
@@ -364,6 +371,20 @@ object DialogHelpers {
             dialog.dismiss()
         }
         dialog.show()
+    }
+
+    private fun updateTitleHighlight(textView: TextView, color: Int) {
+        val text = textView.text.toString()
+        val spannable = SpannableString(text)
+        if (color != 0) {
+            spannable.setSpan(
+                BackgroundColorSpan(color),
+                0,
+                text.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        textView.text = spannable
     }
 
     private class ColorGridAdapter(

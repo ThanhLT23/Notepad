@@ -247,4 +247,8 @@ object ColorHelpers {
             )
         }
     }
+
+    fun getMainColors(context: Context): List<Int> {
+        return colorConfigs.map { ContextCompat.getColor(context, it.mainColor) }
+    }
 }
