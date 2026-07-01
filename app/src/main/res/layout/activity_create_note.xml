@@ -46,6 +46,7 @@
             android:textColorHint="@color/textHint"
             android:hint="@string/note_title"
             android:inputType="text"
+            android:textCursorDrawable="@drawable/cursor_color"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

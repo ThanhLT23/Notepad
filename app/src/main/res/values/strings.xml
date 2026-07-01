@@ -73,4 +73,5 @@
     <string name="creation_date_from_newest">creation date: from newest</string>
     <string name="creation_date_from_oldest">creation date: from oldest</string>
     <string name="color_in_order_as_shown_on_color_palette">color: in order as shown on color palette</string>
+    <string name="no_categories_info">Categories can be added in the app\'s menu. To open the menu use the \u2261 button in the top left corner of the note list screen.</string>
 </resources>

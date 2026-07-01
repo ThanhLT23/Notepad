@@ -40,7 +40,11 @@ class TrashFragment : BaseFragment<FragmentTrashBinding>(R.layout.fragment_trash
                 } else {
                     val note = viewModel.deleteList.value.find { it.note.id == noteId }
                     note?.let {
-                        DialogHelpers.showItemAction(requireContext()) { action ->
+                        DialogHelpers.showItemAction(
+                            requireContext(),
+                            noteTitle = it.note.title,
+                            noteContent = it.note.content
+                        ) { action ->
                             when (action) {
                                 NoteAction.RESTORE -> viewModel.restoreItem(noteId)
                                 NoteAction.DELETE -> viewModel.hardDelete(noteId)
