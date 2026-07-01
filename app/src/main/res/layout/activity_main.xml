@@ -58,10 +58,10 @@
         app:itemShapeInsetStart="0dp"
         app:itemShapeInsetEnd="0dp"
         app:itemShapeAppearance="@null"
+        app:itemIconTint="@color/drawer_item_color"
         android:background="@color/backgroundColor"
         app:menu="@menu/menu_drawer"
         app:headerLayout="@layout/nav_header"/>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>
-

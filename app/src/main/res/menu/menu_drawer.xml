@@ -4,7 +4,7 @@
         <item
             android:id="@+id/itNote"
             android:icon="@drawable/ic_note"
-            android:title="@string/menu_notes" />
+            android:title="@string/menu_notes"/>
     </group>
 
     <item

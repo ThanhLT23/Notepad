@@ -21,6 +21,7 @@
     <color name="note_border">#9f8964</color>
     <color name="bg_note_selected">#bd9f82</color>
     <color name="bg_remove_btn">#d6d8d7</color>
+    <color name="drawer_item_color">#646759</color>
 
     <!-- Text Colors -->
     <color name="textColorPrimary">#111111</color>
