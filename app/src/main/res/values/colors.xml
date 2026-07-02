@@ -22,6 +22,7 @@
     <color name="bg_note_selected">#bd9f82</color>
     <color name="bg_remove_btn">#d6d8d7</color>
     <color name="drawer_item_color">#646759</color>
+    <color name="add_btn_color">#776C45</color>
 
     <!-- Text Colors -->
     <color name="textColorPrimary">#111111</color>

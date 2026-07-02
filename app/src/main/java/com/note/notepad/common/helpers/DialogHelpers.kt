@@ -211,6 +211,7 @@ object DialogHelpers {
         dialog.show()
     }
 
+    @SuppressLint("DiscouragedApi")
     fun sortNotesDialog(
         context: Context,
         currentOption: Int,
@@ -445,8 +446,9 @@ object DialogHelpers {
             .setView(view)
             .create()
         btnRemoveColor.setOnClickListener {
-            onSave(0)
-            dialog.dismiss()
+            tempSelectedColor = 0
+            updateTitleHighlight(tvTitle, tempSelectedColor)
+            adapter.updateSelectedColor(0)
         }
         btnCancel.setOnClickListener {
             dialog.dismiss()
@@ -502,6 +504,20 @@ object DialogHelpers {
 
                     onColorClicked(color)
                 }
+            }
+        }
+
+        fun updateSelectedColor(newColor: Int) {
+            val oldColor = selectedColor
+            selectedColor = newColor
+
+            val oldIndex = colors.indexOf(oldColor)
+            val newIndex = colors.indexOf(newColor)
+            if (oldIndex != -1) {
+                notifyItemChanged(oldIndex)
+            }
+            if (newIndex != -1) {
+                notifyItemChanged(newIndex)
             }
         }
 

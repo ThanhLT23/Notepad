@@ -1,6 +1,9 @@
 package com.note.notepad.ui.main
 
+import android.view.View
+import android.widget.ImageButton
 import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -24,6 +27,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun initViews() {
         setSupportActionBar(binding.tbMain)
+        binding.tbMain.setSubtitleTextColor(ContextCompat.getColor(this, R.color.white))
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -63,6 +67,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 }
             }
         }
+        binding.dlMain.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                super.onDrawerSlide(drawerView, slideOffset)
+                for (i in 0 until binding.tbMain.childCount) {
+                    val child = binding.tbMain.getChildAt(i)
+                    if (child is ImageButton) {
+                        child.rotation = slideOffset * 360f
+                    }
+                }
+            }
+        })
     }
 
     override fun observeData() {
@@ -76,7 +91,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 override fun onSupportNavigateUp(): Boolean {
     return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 }
-
 
 private fun updateDrawerCategory(categories: List<CategoryItems>) {
     val menu = binding.navMain.menu

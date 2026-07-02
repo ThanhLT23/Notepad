@@ -19,8 +19,9 @@ class CreateNoteViewModel(
     val currentNote = _currentNote.asStateFlow()
     private val _selectedCategoryIds = MutableStateFlow<List<Int>>(emptyList())
     val selectedCategoryIds = _selectedCategoryIds.asStateFlow()
-    private val _noteColor = MutableStateFlow<Int>(0)
+    private val _noteColor = MutableStateFlow(0)
     val noteColor = _noteColor.asStateFlow()
+    private var currentNoteId: Int = -1
 
     val allCategories = categoryRepository.getAllCategories()
         .stateIn(
@@ -30,6 +31,7 @@ class CreateNoteViewModel(
         )
 
     fun loadData(noteId: Int, recentCategoryId: Int = -1) {
+        this.currentNoteId = noteId
         if (noteId == -1) {
             if (recentCategoryId != -1 && recentCategoryId != -2) {
                 _selectedCategoryIds.value = listOf(recentCategoryId)
@@ -53,17 +55,7 @@ class CreateNoteViewModel(
         val now = System.currentTimeMillis()
 
         viewModelScope.launch {
-            if (current == null) {
-                val newNote = NoteItems(
-                    title = newTitle,
-                    content = content,
-                    lastTime = now,
-                    creationTime = now,
-                    color = _noteColor.value
-                )
-                val noteId = repository.insertNote(newNote).toInt()
-                repository.updateNoteCategories(noteId, categoryIds)
-            } else {
+            if (current != null) {
                 val updateNote = current.copy(
                     title = newTitle,
                     content = content,
@@ -78,10 +70,9 @@ class CreateNoteViewModel(
     }
 
     fun deleteNote() {
-        val currentId = currentNote.value?.id
-        if (currentId != null && currentId > 0) {
+        if (currentNoteId != -1) {
             viewModelScope.launch {
-                repository.softDelete(listOf(currentId))
+                repository.softDelete(listOf(currentNoteId))
             }
         }
     }
@@ -93,5 +84,4 @@ class CreateNoteViewModel(
     fun updateNoteColor(color: Int) {
         _noteColor.value = color
     }
-
 }

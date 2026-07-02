@@ -342,6 +342,7 @@ class CreateNoteActivity : BaseActivity<ActivityCreateNoteBinding>() {
             R.id.menu_editor_colorize -> {
                 DialogHelpers.showColorDialog(this, viewModel.noteColor.value) { color ->
                     viewModel.updateNoteColor(color)
+                    autoSave()
                 }
                 true
             }

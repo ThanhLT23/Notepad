@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -54,7 +55,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     }
 
     override fun initListener() {
-        binding.btnAddNote.setOnClickListener { viewModel.onFabClicked() }
+        binding.btnAddNote.setOnClickListener {
+            val defaultTitle = getString(R.string.title_untitled)
+            viewModel.completeTutorial()
+            viewModel.onFabClicked(defaultTitle)
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -88,9 +93,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.navigateToEdit.collect { targetCategoryId ->
+            viewModel.navigateToEdit.collect { (noteId, targetCategoryId) ->
                 openEditorScreen(
-                    noteId = -1,
+                    noteId = noteId,
                     categoryId = targetCategoryId
                 )
             }
@@ -135,6 +140,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                         }
                     }
                 }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.showTutorial.collect { show ->
+                binding.layoutTutorial.visibility = if (show) View.VISIBLE else View.GONE
             }
         }
     }

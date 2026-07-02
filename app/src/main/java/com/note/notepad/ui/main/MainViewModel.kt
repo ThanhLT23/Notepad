@@ -3,6 +3,8 @@ package com.note.notepad.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.note.notepad.common.enums.SortOption
+import com.note.notepad.data.local.model.NoteItems
+import com.note.notepad.data.local.prefs.AppPreferences
 import com.note.notepad.data.repository.CategoryRepository
 import com.note.notepad.data.repository.NoteRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,9 +19,10 @@ import kotlin.collections.emptyList
 
 class MainViewModel(
     private val repository: NoteRepository,
-    categoryRepository: CategoryRepository
+    categoryRepository: CategoryRepository,
+    private val appPreferences: AppPreferences
 ) : ViewModel() {
-    private val _navigateToEdit = MutableSharedFlow<Int>()
+    private val _navigateToEdit = MutableSharedFlow<Pair<Int, Int>>()
     val navigateToEdit = _navigateToEdit.asSharedFlow()
     private val _selectedIds = MutableStateFlow<Set<Int>>(emptySet())
     val selectedIds = _selectedIds.asStateFlow()
@@ -33,7 +36,15 @@ class MainViewModel(
     private val _categoryId = MutableStateFlow(-1)
     val categoryId = _categoryId.asStateFlow()
     private var colorOrderList: List<Int> = emptyList()
+    private val _showTutorial = MutableStateFlow(!appPreferences.isTutorial)
+    val showTutorial = _showTutorial.asStateFlow()
 
+    fun completeTutorial() {
+        if (_showTutorial.value) {
+            appPreferences.isTutorial = true
+            _showTutorial.value = false
+        }
+    }
     fun setCategory(id: Int) {
         _categoryId.value = id
     }
@@ -84,9 +95,23 @@ class MainViewModel(
         initialValue = emptyList()
     )
 
-    fun onFabClicked() {
+    fun onFabClicked(defaultTitle: String) {
         viewModelScope.launch {
-            _navigateToEdit.emit(_categoryId.value)
+            val now = System.currentTimeMillis()
+            val newNote = NoteItems(
+                title = defaultTitle,
+                content = "",
+                lastTime = now,
+                creationTime = now,
+                color = 0
+            )
+            val newNoteId = repository.insertNote(newNote).toInt()
+
+            val currentCatId = _categoryId.value
+            if (currentCatId != -1 && currentCatId != -2) {
+                repository.updateNoteCategories(newNoteId, listOf(currentCatId))
+            }
+            _navigateToEdit.emit(Pair(newNoteId, currentCatId))
         }
     }
 
@@ -168,5 +193,6 @@ class MainViewModel(
     fun updateColorOrder(colors: List<Int>) {
         this.colorOrderList = colors
     }
+
 
 }
