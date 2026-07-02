@@ -51,7 +51,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:drawerLayoutCornerSize="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="26dp"
         android:fitsSystemWindows="true"
         app:dividerInsetStart="0dp"
         app:dividerInsetEnd="0dp"
