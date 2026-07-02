@@ -78,4 +78,5 @@
     <string name="tutorial_add">Use the + (plus) button below to create a new note</string>
     <string name="welcome_title">Hi, how are you? (tap to open)</string>
     <string name="welcome_content">Thank you for downloading Notepad Free.\nThis is a welcome message.\nYou can delete this message by clicking\nDelete button in the top right corner.\nYou can revert any unwanted changes during\nnote edition with the \"Undo\" and \"Redo\"\nbuttons. Try to edit this text, and click the\nbuttons in the top right corner.\nPlease check the main menu for additional\nfunctions, like Help screen, backup functions,\nor settings. It can be opened with the button\nin the top left corner of the main screen.\n\nHave a nice day.\n☺️</string>
+    <string name="read_mode_title">Switch to read mode</string>
 </resources>

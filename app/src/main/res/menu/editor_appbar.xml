@@ -68,5 +68,9 @@
         android:id="@+id/menu_editor_colorize"
         android:title="@string/colorize_title"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_read_mode"
+        android:title="@string/read_mode_title"
+        app:showAsAction="never"/>
 
 </menu>

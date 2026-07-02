@@ -21,6 +21,8 @@ class CreateNoteViewModel(
     val selectedCategoryIds = _selectedCategoryIds.asStateFlow()
     private val _noteColor = MutableStateFlow(0)
     val noteColor = _noteColor.asStateFlow()
+    private val _isReadMode = MutableStateFlow(false)
+    val isReadMode = _isReadMode.asStateFlow()
     private var currentNoteId: Int = -1
 
     val allCategories = categoryRepository.getAllCategories()
@@ -83,5 +85,9 @@ class CreateNoteViewModel(
 
     fun updateNoteColor(color: Int) {
         _noteColor.value = color
+    }
+
+    fun onReadMode(isRead: Boolean) {
+        _isReadMode.value = isRead
     }
 }

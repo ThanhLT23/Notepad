@@ -20,53 +20,73 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primaryColor"
-            app:titleTextColor="@color/white"
-            app:title="@string/menu_title"
-            app:navigationIcon="@drawable/ic_back"
             android:theme="@style/MyThemeOverlay_Toolbar"
-            tools:menu="@menu/editor_appbar"/>
+            app:navigationIcon="@drawable/ic_back"
+            app:title="@string/menu_title"
+            app:titleTextColor="@color/white"
+            tools:menu="@menu/editor_appbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clEditor"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:id="@+id/clEditor"
-        app:layout_constraintTop_toBottomOf="@+id/ablEditor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_margin="@dimen/_2sdp"
-        android:background="@drawable/bg_text_input">
+        android:background="@drawable/bg_text_input"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ablEditor">
+
         <EditText
             android:id="@+id/edtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints="note"
-            android:maxLength="50"
-            android:textColorHint="@color/textHint"
+            android:background="@null"
             android:hint="@string/note_title"
             android:inputType="text"
+            android:maxLength="50"
+            android:paddingHorizontal="@dimen/_5sdp"
+            android:paddingTop="@dimen/_6sdp"
+            android:paddingBottom="@dimen/_4sdp"
+            android:textColorHint="@color/textHint"
             android:textCursorDrawable="@drawable/cursor_color"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/edtContent"
+        <View
+            android:id="@+id/viewDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dialog_option_color"
+            android:layout_marginHorizontal="@dimen/_4sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edtTitle" />
+
+        <ScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:autofillHints="text"
-            android:gravity="top"
-            android:hint="@string/note_content"
-            android:inputType="textMultiLine"
-            android:textColorHint="@color/textHint"
+            android:clipToPadding="false"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edtTitle"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/viewDivider">
 
+            <EditText
+                android:id="@+id/edtContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="text"
+                android:gravity="top"
+                android:layout_marginHorizontal="@dimen/_2sdp"
+                android:hint="@string/note_content"
+                android:inputType="textMultiLine"
+                android:textColorHint="@color/textHint" />
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

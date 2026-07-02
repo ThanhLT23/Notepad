@@ -1,11 +1,14 @@
 package com.note.notepad.ui.editor
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.GestureDetector
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -65,6 +68,7 @@ class CreateNoteActivity : BaseActivity<ActivityCreateNoteBinding>() {
         searchManager = SearchManager(binding.edtContent)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun initListener() {
         binding.tbEditor.setNavigationOnClickListener {
             if (isSearchMode) {
@@ -76,6 +80,40 @@ class CreateNoteActivity : BaseActivity<ActivityCreateNoteBinding>() {
                         .show()
                 }
                 onBackPressedDispatcher.onBackPressed()
+            }
+        }
+
+        val gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDown(e: MotionEvent): Boolean = true
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                if (viewModel.isReadMode.value) {
+                    showToast("Tap twice to edit")
+                }
+                return super.onSingleTapConfirmed(e)
+            }
+
+            override fun onDoubleTap(e: MotionEvent): Boolean {
+                if (viewModel.isReadMode.value) {
+                    switchToEditMode()
+                }
+                return true
+            }
+        })
+        binding.edtContent.setOnTouchListener { view, event ->
+            gestureDetector.onTouchEvent(event)
+            if (event.action == MotionEvent.ACTION_UP) {
+                view.performClick()
+            }
+            false
+        }
+        binding.edtTitle.setOnTouchListener { view, event ->
+            if (viewModel.isReadMode.value) {
+                if (event.action == MotionEvent.ACTION_UP) {
+                    view.performClick()
+                }
+                true
+            } else {
+                false
             }
         }
     }
@@ -136,6 +174,24 @@ class CreateNoteActivity : BaseActivity<ActivityCreateNoteBinding>() {
                 binding.root.setBackgroundColor(displayBGColor)
             }
         }
+        lifecycleScope.launch {
+            viewModel.isReadMode.collect { isRead ->
+                binding.edtTitle.isFocusable = !isRead
+                binding.edtTitle.isFocusableInTouchMode = !isRead
+                binding.edtContent.isFocusable = !isRead
+                binding.edtContent.isFocusableInTouchMode = !isRead
+                binding.edtTitle.isCursorVisible = !isRead
+                binding.edtContent.isCursorVisible = !isRead
+
+                if (isRead) {
+                    binding.edtTitle.clearFocus()
+                    binding.edtContent.clearFocus()
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+                }
+                invalidateOptionsMenu()
+            }
+        }
     }
 
 
@@ -175,6 +231,15 @@ class CreateNoteActivity : BaseActivity<ActivityCreateNoteBinding>() {
             pendingQuery = ""
         }
 
+    }
+
+    private fun switchToEditMode() {
+        viewModel.onReadMode(false)
+        binding.edtContent.isFocusableInTouchMode = true
+        binding.edtContent.requestFocus()
+        binding.edtContent.setSelection(binding.edtContent.text.length)
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.edtContent, InputMethodManager.SHOW_IMPLICIT)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -261,16 +326,36 @@ class CreateNoteActivity : BaseActivity<ActivityCreateNoteBinding>() {
         undoAllItem?.isEnabled = canUndo
         undoAllItem?.icon?.alpha = if (canUndo) 255 else 130
 
+        val saveItem = menu?.findItem(R.id.menu_save)
+        val readModeItem = menu?.findItem(R.id.menu_read_mode)
+        if (viewModel.isReadMode.value) {
+            saveItem?.setIcon(R.drawable.ic_edit)
+            readModeItem?.isVisible = false
+            undoItem?.setIcon(R.drawable.ic_download)
+            redoItem?.isVisible = false
+            undoAllItem?.isVisible = false
+        } else {
+            saveItem?.title = getString(R.string.save_menu)
+            readModeItem?.title = getString(R.string.read_mode_title)
+        }
+
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_save -> {
-                val isSaved = autoSave()
-                if (isSaved) {
-                    Toast.makeText(this, getString(R.string.note_saved_toast), Toast.LENGTH_SHORT)
-                        .show()
+                if (viewModel.isReadMode.value) {
+                    viewModel.onReadMode(false)
+                    binding.edtContent.requestFocus()
+                    binding.edtContent.setSelection(binding.edtContent.text.length)
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.showSoftInput(binding.edtContent, InputMethodManager.SHOW_IMPLICIT)
+                } else {
+                    val isSaved = autoSave()
+                    if (isSaved) {
+                        showToast(getString(R.string.note_saved_toast))
+                    }
                 }
                 true
             }
@@ -343,6 +428,23 @@ class CreateNoteActivity : BaseActivity<ActivityCreateNoteBinding>() {
                 DialogHelpers.showColorDialog(this, viewModel.noteColor.value) { color ->
                     viewModel.updateNoteColor(color)
                     autoSave()
+                }
+                true
+            }
+
+            R.id.menu_read_mode -> {
+                val isRead = viewModel.isReadMode.value
+                viewModel.onReadMode(!isRead)
+                if (isRead) {
+                    binding.edtContent.requestFocus()
+                    binding.edtContent.setSelection(binding.edtContent.text.length)
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.showSoftInput(binding.edtContent, InputMethodManager.SHOW_IMPLICIT)
+                } else {
+                    val isSaved = autoSave()
+                    if (isSaved) {
+                        showToast(getString(R.string.note_saved_toast))
+                    }
                 }
                 true
             }
